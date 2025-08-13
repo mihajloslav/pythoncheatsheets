@@ -1,0 +1,1159 @@
+U Pythonu je sve objekat
+
+paket je folder koji ima __init__.py npr folder python ima __init__.py
+
+
+string u pajtonu moze i sa '' i sa "" nije bitno
+
+CTRL + ALT + ENTER da izvrsi komandu
+
+CTRL + / - za komentarisanje
+
+
+CTRL + ENTER DA SE IZKOMPAJLIRA VALJDA
+
+
+struktura projekta
+
+.idea - za konfiguraciju okruzenja
+blanknotebooks (folder) -
+blankscripts (folder) - unapred prazne skripte
+
+
+
+
+
+
+KADA HOCEMO NESTO DA DODAMO NA GITHUB SELEKTUJEMO PA DESNI KLIK PA ADD
+
+
+
+""" """ - dugi komentari o odnosno docstring
+# - komentari u jednom redu
+#%% - nova celija
+
+range(1,5) - ide od 1 do 4, poslednja se izostavlja
+range(5) - ide od 0 do 4
+
+range(1 , n + 1, 1) - treci argument je za koliko se pomera
+
+enumerate(lista) vraca (index, element_liste) kad je u for loop
+
+
+
+__name__ vraca naziv skripte
+__doc__ - dokumentacija odnosno ono sto je u """ """
+__file__ - tacna adresa fajla
+i funkcije imaju __doc__
+print(print_ringo.__doc__)
+
+ona skripta koja se izvrsava ima naziv odnosno __name__ = __main__
+
+
+modul - fajl u pajtonu u kome su definisane neke funkcije i klase, ali nema izvrsnih naredbi
+
+skripta - fajl u pajtonu gde imamo izvrsne naredbe
+
+
+
+kada importujemo neki drugi fajl npr
+from python.inception import print_ringo
+
+ako u njemu postoji neki poziv funkcije on ce se izvrsiti 
+
+
+if __name__ == '__main__':
+    print_ringo()
+ovo se nece izvrisiti ako pozovemo iz neke druge skripte
+
+
+Funkcija print ima sep i end argumente
+print('Ringo Starr', 'John Lennon', sep=' &')
+
+Ffunkcija input moze da ima tekst npr input(Prompt:)
+ili to
+ili
+print("Prompt:")
+input()
+
+
+Enumerate
+
+# for i, musician in enumerate(the_beatles):
+#     print(i + 1, musician)
+# print(enumerate(the_beatles))
+
+-------------------------
+Divmod
+divmod vraca rezultat deljenja i ostatak deljenja prvog argumenta sa drugim
+
+
+    result, remainder = divmod(num, 2)
+    odd_even_str = "EVEN" if remainder == 0 else "ODD"
+    print(f"The number you've entered ({num}) is {odd_even_str}")
+    
+--------------------------------------------------
+Sorted
+sorted(items)[n - 1]; vraca sortiranu listu i sa ovim [] mozemo da pristupimo elementu
+------------------------------
+Nije u listi
+num not in new_list
+---------------------------
+Dodavanje u listu
+lista.append(element)
+--------------------------------
+Sortirana u opadajucem poretku
+
+
+sorted(new_list, reverse=True) ovo vraca novu listu i onda mozemo da prolazimo kroz nju npr
+
+for num in sorted(new_list, reverse=True)
+
+--------------------
+Print dodaje \n na kraju 
+-------------
+IsDigit
+
+if not guess_str.isdigit()
+-------------------------------
+Importe mozemo i u funkcijama npr
+
+ from random import randint
+ --------------------------
+ Celobrojno deljenje
+ 
+  The integer division operator: //
+  
+  --------------------------------
+  a==b poredjenje po sadrzaju
+  a is b poredjenju po adresi
+  
+  Poredjenje datuma
+  a = date.today()
+  b = date.today()
+  
+  date1 == date2 ovo vraca true
+  
+  a poredjenje objekata (id(date1) i id(date2))
+  
+  date1 is date2
+  
+  date1 > date2 ako pitamod da li je datum posle danasnjeg datuma
+
+
+ako su prosti podaci npr int, float, string
+
+onda ce 
+
+a == b i a is b da vrate true ako su isti
+
+
+Na stepen valjda ide x ** 2
+
+
+None se ne sme koristiti sa realacionim operatorima
+----------------------------------
+logicki operatori
+
+
+&& - and
+|| - or
+! - not
+
+print(1 and 4) - ako je ovo prvo nesto tacno, onda ce da propusti to prvi ispisace ovo drugo
+print(None or [4,3]) - ovo ce ispisati prvo ako je tacno
+---------------------
+Falseoidno je
+
+None, [], '', 0
+---------------------
+Nebitan brojac u petlji _
+for _ in range(5):
+	print('Zoran')
+--------------------
+Stringovi
+
+C formatiranje
+
+print("Zorane ima %d godina %s" %(a, b))
+
+Preskakanje \n karaktera
+
+print(r"C:\nobody);
+
+Multiline
+
+print("""Zoran
+Petar
+Ivan""")
+
+String slicing
+
+print("Zoran"[od kog: do kog: korak]
+
+print("Zoran"[2::])
+
+print("Zoran"[::-1]) - unazad
+
+
+String multiplication
+
+
+print("Zoran" * 3) 
+
+
+Str i repr
+
+print(str('Zoran')) - Zoran
+
+print(repr('Zoran')) - 'Zoran'
+
+
+Fancy formatting
+
+print("Zoran ima {} godina u {} godini".format(5, 2025)) - najsigurnije moze i print("Zoran ima {0} godina u {1} godini".format(5, 2025))
+
+
+f string
+
+
+print(f"Zoran ima {godine} u {godina}")
+
+
+Funkcije za stringove
+
+.endswith('rec) -> True/False
+.split('rec' ili bez icega) -> Lista reci
+.center(duzina_novog_stringa, 'znak sa kojim popunjava') -> ***Zoran***
+rec in 'String' -> kao contains da li postoji rec u ovom stringu
+.strip('karakter') -> sklanja sve karaktere levo i desno od reci
+.lstrip('karakter') -> isto samo levo
+.rstrip('karakter) -> isto samo desno
+
+------------------------------
+Liste
+
+ringo = [] ili ringo = list()
+
+ringo = ['Ringo Starr', 1940, True, 'The Beatles']
+    print(ringo) - printuje listu
+    print(ringo[1]) - printuje 2. lement
+    print(ringo[1:3]) - printuje elemente listu sa elementima od 2. do 3.
+    print(ringo[-2:]) - uprintuje listu sa elementima od drugog od pozadi
+    print(ringo == ['Ringo Starr', 1940, True, 'The Beatles']) - tacno je
+    print(ringo is ['Ringo Starr', 1940, True, 'The Beatles']) - nije tacno
+    print(ringo + ['John Lennon']) - dodavanje elementa u listu, tj spajanje dve liste
+    print()
+
+    for e in ringo:
+        print(e)
+        
+    ringo.append('John Lennon') - dodaje na kraj list
+    ringo.insert(2, 'Paul McCartney') - ubacuje na 3. mesto
+    ringo.remove('Paul McCartney') - brise element
+    ringo.pop() - izbacuje sa kraja
+    ringo.extend(['John Lennon', 'Paul McCartney']) - spaja dve liste isto kao ringo + ['John Lennon']
+    print(ringo.count('John Lennon')) - broji pojavljivanje elementa
+    print(ringo.index('John Lennon')) - vraca indeks prvog projavljivanja
+    ringo.reverse() - obrce listu
+    print(ringo)
+    print(len(ringo)) - vraca duzinu liste
+    print('John Lennon' in ringo) - da li lista sadrzi element
+    print('John Lennon' not in ringo) - da li lista ne sadrzi element
+    
+    
+----------------------------------
+Liste i random
+randint - vraca rendom cifru
+seed - ako zelimo svaki put jednu te istu kombinaciju
+
+  from random import seed, randint
+    l = []
+    seed(3546)
+    for i in range(10):
+        l.append(randint(1, 100))
+    print(l)
+------------------------------------
+Kpiranje liste
+
+r = ringo   - OVO PREBACUJE POKAZIVAC
+
+3 nacina
+r = ringo.copy()
+r = ringo + []
+r = ringo[:]
+------------------------------------
+String comprehension
+
+songs = ['Honey Don\'t', 'Eleanor Rigby', 'Lucy in the Sky With Diamonds', 'Penny Lane', ]
+
+first_words = [s.split()[0] for s in songs]  -ovo se cita unazad, uzima prvu rec
+first_letters = [w[0] for w in first_words] - uzima prvo slovo
+first_letters = ''.join([w[0] for w in first_words])  - ovo pravi novi string sa elementima liste
+first_letters = ''.join([w[0] for w in first_words]).capitalize()
+first_letters = ''.join([w[0] for w in first_words]).capitalize() + '!'
+
+songs = ['Honey Don\'t', 'Eleanor Rigby', 'Lucy in the Sky With Diamonds', 'Penny Lane', 'Eleanor Rigby', ]
+ i = [i for i, title in enumerate(songs) if title == 'Eleanor Rigby'] - vraca indekse gde eje element Eleanor Rigby
+ -------------------------------------------
+ Zip
+ zip(l1,l2) - pravi tuplove lupam [["M", "y"], ["Na", "me"]]
+ 
+ for i, j in zip(l1,l2):
+ 	l3.append(i+j)
+ 	
+ 	return [i+j for i, j in zip(l1,l2)]
+ 	
+Zip spaja elemente po indeksima iz vise listi ili tupleova
+zip(l1,l2,l3) i sada ce svaki element da ima spojeno elemente iz sva tri
+
+neki_zip = zip(l1,l2,l3)
+for l1, l2, l3 in neki_zip:
+	print(l1,l2,l3)
+zipovi rade kao iteratori pa nakon ovog fora neki_zip ce da bude prazan
+	
+	
+-----------------------------------------------
+Round
+
+round(len(lista)) - zaokruzuje na cele brojeve
+
+Round to even - zaokruzuje na paran broj
+3.5 -> 4
+---------------------------------------
+Negativni indeksi
+
+text[-(i+1)] - poslednji
+2.5 -> 2
+-------------------------------
+Funkcija all
+vraca true ako su svi elementi u listi true npr
+
+return all([text[i] == text[-(i+1)] for i in range(midpoint)]
+-------------------
+return txt == list(reversed(text))
+---------------------------
+Funkcija any
+vraca true ako je bilo koji element u listi true npr
+
+if not any([ch.islower() for ch in word])
+-----------------------------
+za liste
+
+valid = [False]*5
+--------------------------
+da podeli string u po redovima
+
+string.strip("\n")
+---------------------------
+kada znamo kako ce da izgleda svaka linija
+
+_, name, _, state = line.split() # server abs i up
+-----------------------
+ch.islower()
+ch.isupper()
+ch.isdigit()
+ch.isalnum()
+-----------------------------
+Sorted
+
+sorted(l1) == sorted(l2)
+
+------------
+Spajanje stringova
+
+print(john, paul, george, ringo, sep =', ')
+
+ili 
+print(', '.join(the_beatles))
+-------------------------------
+Tuples - uredjena n-torka, jednom kad se napravi, ne moze da se menja nijedan element
+
+ringo = () ili ringo = tuple() ali nema smisla kreirati prazan tuple
+
+kada se kreira tuple to moze na vise nacina
+
+ringo = ('Ringo',)
+ringo = 'Ringo',
+
+BITNO JE DA IMA OVAJ ZAREZ NA KRAJU
+
+pristup elementima tupleu
+
+ringo[0]
+
+Raspakivanje tuplea
+
+the_beatles = 'John Lennon', 'Paul McCartney', 'George Harrison', 'Ringo Starr',
+john, paul, george, ringo = the_beatles
+
+Pretvaranje tuplea u listu
+print(list(the_beatles))
+
+
+
+-------------------
+Iterables - svi tipovi podataka kroz koje se moze proci
+
+
+
+----------------------
+Dictionaires - parovi kljuc-vrednost
+
+ringo = {} ili ringo = dict()
+
+ringo = {'name': 'Ringo Starr', 'year' : 1940}
+
+print(ringo['name'])
+
+ringo.items() - vraca tuplete kljuceva i vrednosti
+
+for k, v in ringo.items():
+	print(str(k) + ':' + str(v)
+	
+ili ovako
+
+from pprint import pprint
+
+pprint(ringo, width = 1); kao po redovima da printuje
+
+Dodavanje u recnik
+
+ringo['city'] = 'Liverpool'
+
+Brisanje iz recnika
+
+del ringo['city']
+
+
+Dodavanje vise elemenata
+
+ringp.update({'city' : 'Liverpool', 'band' : 'The Beatles})
+
+
+ringo.keys() -- vraca kljuceve
+
+ringo.values() - vraca vrednosti
+
+
+
+Sortiranje recnika
+1)
+return dict(sorted(zip(d.keys(), d.values()))) - sortira po prvom elementu tj ovde po d.keys()
+return dict(sorted(zip(d.values(), d.kes()))) - sortira po prvom elementu tj ovde po d.values() - ali ovde je problem sto ne moze da poredi int i string ako imamo valuese razlicitih tipova
+
+2)
+from operator import itemgetter
+return dict(sorted(d.items(), key = itemgetter(0))) -sortira po kljucevima, ovo itemgetter(0) znaci po prvim elementima iz tupleta posto d.items() vraca tupletima odnosno (k,v)
+return dict(sorted(d.items(), key = itemgetter(1))) -sortira po kljucevima, ovo itemgetter(1) znaci po drugim elementima iz tupleta posto d.items() vraca tupletima odnosno (k,v)
+
+
+3)
+return dict(sorted(d.items(), key = lambda x: x[0]))
+return dict(sorted(d.items(), key = lambda x: x[1]))
+
+
+Dictionary comprehension
+
+return {k: v for k, v in zip(l1,l2)}
+
+return {k:v for k, v in sorted(d.items(), itemgetter(0))} 
+---------------------------------------------
+Sets - skupovi, nema ponavljanja elemenata
+
+the_beatles = set()
+
+the_beatles = {'John Lennon', 'Paul McCartney', 'George Harrison', 'Ringo Starr'}
+
+dodavanje elementa
+
+the_beatles.add('Ringo')
+
+uklanjanje elemenata
+
+the_beatles.remove('Ringo')
+
+
+SLUZE NAJVISE DA NAPRAVIMO LISTU BEZ PONAVLJANJA ELEMENATA
+
+the_beatles = ['John Lennon', 'Paul McCartney', 'George Harrison', 'Ringo Starr']
+
+the_beatles = list(set(the_beatles))
+
+
+Operacije sa skupovima
+
+print({'John Lennon', 'Paul McCartney', 'George Harrison'} & {'George Harrison', 'Ringo Starr'}) - presek
+print({'John Lennon', 'Paul McCartney', 'George Harrison'} | {'George Harrison', 'Ringo Starr'}) - unija
+print({'John Lennon', 'Paul McCartney', 'George Harrison'} ^ {'George Harrison', 'Ringo Starr'}) - xor - disjunkcija
+print({'John Lennon', 'Paul McCartney', 'George Harrison'} - {'George Harrison', 'Ringo Starr'}) - razlika
+
+
+Ispisivanje obrnutog recnika
+
+for k, v in sorted(d.items(), reverse = True):
+	print(f"{k}:{v}")
+
+def lists_to_dict(l1,l2):
+	d = dict()
+	elem_num = min(len(l1), len(l2)) //broj koji imaju obe
+	for i in range(elem_num):
+		d[l1[i]] = l2[i]
+		
+	ili
+	for item1, item2 in zip(l1, l2, strict =True):  ----Strict da baca izuzetak ako nije isti broj elemenata 
+		d[item1] = item2
+		
+	ova dva nacina ubacuju najmanji broj elemenata od lista, znaci ako je manja lista sa 4 elemenata, a veca sa 5, ubacice 4 elemenata
+	
+	
+	Ako nam je potrebno da to ne radi nego za elemente koji nemaju para da ubaci neke predefinisane vrednosti onda radimo ovo
+	from itertools import zip_longest
+	for item1, item2 in zip_longest(l1, l2, fillvalie="unknown"):
+		d[item1] = item2
+		
+		
+Default Dict
+Ako je potrebno da eksplicitno kazemo kog su nam tipa values u dictu
+
+from collections import defaultdict
+
+d = defaultdict(int)
+
+
+d = defaultdict(list)
+
+d[i].append("aaa")
+-------------------
+Funkcija sum
+
+sum(range(1, n+1)) 
+
+-------------------
+Mean
+Za prosek vrednosti 
+
+from statistics import mean
+
+mean_age = mean(member['age'] for member in members)
+------------------
+Max - trazi najvecu vrednost
+
+best_under_21 = max([member for member in members if member['age'] < 21], key= lambda m: m['score']) - gledace skor
+-------------------------
+Sorted key
+
+sorted(members, key = lambda m:m['score']) - vraca sortirano po scoru
+
+-----------------------------
+sortiranje po vise toga
+znaci npr prvo po kljucevima pa onda po vrednostima obrnuto
+
+for toke,freq in sorted(sorted(d.items(), key=itemgetter(1), reverse = True));
+
+-----------------
+lambda umesto itemgetter za sorted
+
+key = itemgetter(1)
+
+key = lambda item : item[1]
+
+------------------------------
+Counter
+
+from collecgtions impor Counter
+
+list = [1,1,1,2,2,2,3,3]
+d = dict(Counter(list))
+
+d = {1 : 3, 2 : 3, 3: 2}
+-------------------
+ako treba da izvucemo domen iz adrese
+
+_, suffix = website.rsplit('.', maxsplit=1) ovo ce da krene se desne strane i da podeli string kod prve tacke i necemo uzeti ono sto je pre tacke
+suffix = suffix.rstrip('/') 
+----------------------------
+Anotacije funkcije
+
+print(funkcija.__annotations__)
+
+
+Default argumenti
+
+def funkcija(title, author = "Ringo", year:int = 1968)
+
+
+Named, pozicioni argumenti su oni koji nisu default, to je ovde gore title, i bitan je nihov redosled i moraju da dodju pre default argumenata
+
+
+Locals - locals() svi lokalni podaci, znaci varijable sa njihovim vrednostima funkcije
+------------------
+Fleksibilni argumenti (raspakivanje) - moze da im se prebaci nesto, a moze i nista
+
+list = ['prvi', 'drugi', 'treci']
+
+def funkcija (band, *members)
+
+funkcija(*list) ovo ce raspakovati listu kao tuple
+
+Nesto random
+
+b = band
+b = b + ': ' if members else ''
+m = ', '.join(members) if members else ''
+
+--------------------------
+Keyword argumenti (kwargs)
+def funkcija(band, *members, is_active_True, **details)
+
+
+funkcija('The Beatles, is_active = False, start = 1962, end = 1970)
+
+details ce da ima vrednost {'start': 1962, 'end': 1970}
+a *details ce da prikaze kljuceve 
+-------------------
+Prioritet argumenata kojim redosledom moraju da idu
+Pozicioni - fleksibilni - named - keyword
+
+--------------------
+Funkcija kao argument funkcije
+
+def g(h, *args)
+	return h(*args)
+	
+takodje u okviru funkcije mozemo definisati funkcije npr
+
+def return_func(full_name, first_name_flag):
+	def first():
+		return full_name.split()[0]
+	def last():
+		return full_name.split()[1]
+	
+	return first if first_name_flag else last
+	
+	
+f = return_func('Ringo', false)
+print(f())
+
+
+
+
+--
+def return_function_with_args(*args):
+    def empty(*p):
+        return ()
+
+    def non_empty(*p):
+        return p
+
+    return non_empty if args else empty
+
+f = return_function_with_args(1)
+print(f('Ringo', 'Starr', 1940))
+--------------------------------------
+Dekoratori - malo menjaju funkciju
+
+def simple_decoratior(f):  ---- prosledjujemo funkciju dekoratoru
+	def wrap(*args):
+        	print('-------')
+        	v = f(*args)  ---- i pozivamo funkciju u okviru ove funkcije, ali dekorisanu sa ovima crticama
+       		print('-------')
+        	return v
+
+    return wrap
+
+
+
+def songs(*args):
+    print(f'{", ".join([arg for arg in args])}')
+
+
+songs('Act Naturally', 'With a Little Help from My Friends')
+
+f = a_very_simple_decorator(songs)  --- ovo ce da vrati wrap
+f('Act Naturally', 'With a Little Help from My Friends') ---ovde pozivamo wrapp
+
+
+
+
+Pattern za dekoratore
+
+
+
+ import functools
+ def decorator(f_to_decorate):
+        @functools.wraps(f_to_decorate) # preserves func's identity after it's decorated
+        def wrapper_decorator(*args, **kwargs): 
+            # Do something before
+            value = f_to_decorate(*args, **kwargs)      # (*args, **kwargs) are wrapper_decorator's formal arguments!
+            # Do something after
+            return value
+        return wrapper_decorator
+
+
+Primer
+
+def band_details(f_to_decorate):
+    @functools.wraps(f_to_decorate)
+    def wrap(*args, **kwargs):
+        print('-------')
+        v = f_to_decorate(*args, **kwargs)
+        if kwargs:
+            print(f'{', '.join([str(k) + ': ' + str(v) for k, v in kwargs.items()])}')
+        if len(args) > 1:
+            print(f'{', '.join([a for a in args[1:]])}')
+        print('-------')
+        return v
+
+    return wrap
+    
+    
+i sada kada imamo neku funkciju
+@band_details
+def print_band(name, *members, **years_active):
+    print(name)
+    
+ovo iznad @band_details znaci da kad pozovemo funkciju print_band da će da se pozove ona ali dekorisana sa ovim dekoratorom
+
+
+
+print_band.__name__ vraca ime funkcije print_band a ne wrap odnosno dekorator zbog ovog gore  @functools.wraps(f_to_decorate)
+--------------------------------------------------
+Klase
+
+__init__() - konstruktor
+
+__str__() - toString
+
+__eq__(self, other) - equals
+
+
+def __init__(self, name, is_band_member=True):
+	self.name = name;
+	
+	
+def __str__(self):
+	return 'f{self.name}'
+
+def __eq__(self, other):
+	return self.__dict__ = other.__dict__ if instance(other, Musician) else False
+	
+__dict__ - sva polja
+
+
+Getteri i setteri
+
+__name - private field (ali nije bas toliko privatno zato sto mozemo da uradimo ovo
+
+objekat._Klasa__name i dobicemo vrednost)
+_name - protected field
+
+
+
+@property
+def name(self):
+	return self.__name
+	
+@name.setter
+def name(self,name):
+	self.__name = name if isinstance(name, str) else 'Unknown'
+
+__name je neko zasticeno polje
+
+
+
+ako definisemo neko privatno polje u okviru konstruktora odnosno u konstruktoru mu dodelimo vrednost za njega mozemo da kreiramo samo getter bez settera, inace ne smemo
+
+
+
+kada pozivamo u okviru klase neku funkciju ili polje koje je definisano u okviru klase
+
+mora da ide self pre odnosno npr
+
+self.name
+self.play()
+
+------------------------------------------
+__dict__ - prikazuje sve atribute klase
+
+
+atribude klase mozemo da prosirimo npr ako neka klasa nema polje birth_year mi mozemo da dodamo sa
+
+objekat.birth_year = 1940
+
+i videcemo da ce da se doda to polje
+
+ovo moze na tri nacina
+
+1)objekat.new_attr = value
+2)objekat.__setattr__('new_attr', vrednost)
+3)setattr(objekat, 'new_attr', vrednost)
+
+
+takodje postoji i __getattribute__
+
+1) objekat.__getattribute__('attr')
+2) getattr(objekat, 'attr')
+
+-------------------------------
+Alternativni konstruktor
+@classmethod
+def alternative(cls, name, question)
+	return cls(name, is_band_member)
+	
+ovo cls je kontruktor kalse i on mora bude uvek prvi argument u ovom alternativnom
+
+
+i ovo pozivamo iz klase
+
+objekat = Klasa.alternaive(name, question)
+
+-----------------------------------
+Neke vrednosti
+
+True + 1  je 2
+
+True.__int__() -> 1
+False.__int__() - > 0
+
+(1).__class__ -> <class 'int'>
+(1).__class__.__name__ -> int
+
+objekat.__dir__ -> vraca sve metode i sve atribude jednog objekat
+objekat.__dict__ -> vraca sve atribute 
+
+
+object klasa je na vrhu hijerarhije
+
+------------------------------------
+Date Time
+
+formatiranje
+
+return datum.strftime(FORMAT) if isinstance(datum, date) else datum
+---------------------------
+Staticne metode
+
+dodajemo dekorator
+
+@staticmethod
+def funkcija():
+	return ..
+	
+Klasa.funkcija()
+--------------------------
+Iteratori klase (OVO NAUCI UVEK ISTO PISI OVAKO)
+
+def __iter__(self):
+	self.__i=0
+	return self
+	
+ali onda mora i metoda next
+
+def __next__(self):
+	if self.__i < len(self.members):
+		n = self.members[self.__i]
+		self.__i += 1
+		return n
+	else:
+		raise StopIteration
+----------------------------------------
+Van klase iterator
+od nekog objekta pravimo iterator
+
+i = iter(the_beatles) #u pozadini ovo poziva __iter__
+
+
+i onda posle kad pozivamo
+
+While True:
+	try:
+		print(next(i))
+	except StopIteration:
+		break
+
+--------------------------------------
+Generatori - funkcije van klase, sluze da iteriramo kroz podatke, ali nisu deo klase
+Primene: web scraping
+ima nova komanda yield
+
+def generatorska_funkcija(band):
+	for m in band.members:
+		yield m  ---vrati nam clana benda tj njegov to string valjda vrati i onda saceka dok ne udarimo enter
+		
+i to sad pozivamo sa
+
+n = generatorska_funkcija(the_beatles)
+
+While True:
+	try:
+		print(next(n))
+	except StopIteration:
+		break
+-----------------------
+Generatorski izrazi
+
+g = (x ** 2 for x in range(4))
+
+while True:
+	try:
+		print(next(g))
+	except StopIteration:
+		break
+		
+----------------------------
+Enumeratori
+
+from enum import Enum
+
+kada pravimo svoje enumeratore to radimo tako sto nasledimo Enum
+
+ne sme zarez izmedju njih zato sto je to tuple
+
+class Vocals(Enum):
+	LEAD_VOCALS = 1   ---moramo da imamo neku vrednost
+	BACKGROUND_VOCALS = 2
+
+
+
+i sada kad pristupamo nekom enumeratoru
+
+vocals.name  vraca npr LEAD_VOCALS
+
+----------------------
+Inheritance - u pythonu postoji visestruko nasledjivanje
+ne postoje interfejsi, ali se efekat interfejsa se dostize visestrukim nasledjivanjem
+
+
+class Singer(Musician) -- klasa singer nasledjuje klasu Musician
+
+
+1) ako imamo jednostruko nasledjivanje konsstruktor se pravi
+
+def __init__(self, name, vocals, is_band_member = True):
+	super().__init__(name, is_band_member) -- konstruktor nadklase
+	self.vocals = vocals
+def __str__(self):
+	return super().__str__() + f'{self.vocals.name.lower().replace('_', ' ') }'
+
+
+funkciju iz nadklase pozivamo sa
+
+super().play()
+
+2) ako imamo jednostruko nasledjivanje konsstruktor se pravi
+
+class SingerSongwriter(Singer, Songwriter):
+
+
+treba pripremiti ove nadklase za visestruko nasledjivanje
+
+
+znaci u nadklasi prvo pisemo sta je novo, a posle pisemo sta bi trebalo da prebacimo konstruktoru nadklase u obliku kwargova npr
+
+class Singer(Musician):
+	def __init__(self, vocals = Vocals.LEAD_VOCALS, **kwargs):
+		super().__init__(*kwargs)
+		self.vocals = vocals
+		
+i onda na svakom mestu gde je pozvan konstruktor ove klase moramo eksplicitno na naglasimo sta prebacujemo npr
+
+
+ringo = Singer(name='Ringo Starr', vocals=Vocals.BACKGROUND_VOCALS)
+
+
+
+
+i sada bitan je redosled npr Singer, Songwriter
+
+class SingerSongwriter(Singer, Songwriter):
+	def __init__(self, nesto_novo, **kwargs):
+		super().__init__(**kwargs):
+		self.nesto_novo = nesto_novo
+		
+Ako zelimo da sad pozovemo neku metodu iz jedne nadklase moramo eksplicitno da kazemo
+	def tell(self):
+		print(Singer.what_do_you_do(self))
+		print(Songwriter.what_do_you_do(self))
+		
+
+---------------------------------
+__mro__ - method resolution order 
+
+izbacuje gde mozemo sve da trazimo odredjenu metodu tj iz kojih klasa
+
+bukv izbacuje redosled od kojih klasa je nastala neka klasa
+
+
+----------------------------------
+Exceptions
+
+try:
+	...
+except IndexError as e:
+	syy.stderr.write(f'\n\n{e.__class__.__name__}: {e.args[0]}\n')
+except ZeroDivisionError as e:
+	syy.stderr.write(f'\n\n{e.__class__.__name__}: {e.args[0]}\n')
+except Exception as e:
+	syy.stderr.write(f'\n\n{e.__class__.__name__}: {e.args[0]}\n')
+else:
+	print("Ovo se desi ako se ne desi nijedan exception")
+finally:
+	print("\nOvo se desava svakako")
+	
+
+moze i 
+except:
+	syy.stderr.write(f'\n\nException\n')
+	
+ali se ne preporučuje
+
+
+
+
+Kreiranje Exceptiona
+
+Konvencija je da u jednoj skripti napravimo jedan exception koji ce da bude root za sve exception u toj skripti
+
+
+npr.
+
+class BandError(Exception):
+	pass
+	
+class BandNameError(BandError):
+	def __init__(self,name):
+		self.name = name
+		Exception.__init__(f'Invalid band name: {name}')
+		ili moze super().__init__(f'Invalid band name: {name}')
+	
+	
+umesto throw ovde se pise raise
+
+npr.
+
+raise BandNameError(self.name)
+
+-----------------------------------------
+Fajlovi
+
+from pathlib import Path
+
+
+Path.home() - vraca home direktorijum usera
+
+Path.cwd() - direktorijum u kome se nalazimo, direktorijum projekta (current working directory)
+Path.cwd().absolute() - isto vraca kao gore
+Path().absolute()  - isto vraca kao gore
+Path('.').absolute()  - isto vraca kao gore
+
+.parent() -vraca roditelja trenutkog direktorjuma npr.
+Path.cwd().absolute() - vraca direktorijum u kome se nalazi direktorijum naseg projekta
+
+
+Kreiranje direktorijuma
+
+PROJECT_DIR = Path(__file__).parent
+
+new_dir = PROJECT_DIR / 'new_dir'
+
+new_dir.mkdir(parents=True, exist_ok=True)
+
+
+ovo parents sluzi da ako imamo vise nekih direktorijuma u nasem pathu da kreira sve npr
+PROJECT_DIR / 'new_dir'/ 'folder1'/'folder2'
+
+ovo exist_ok sluzi da ako vec postoji da ga ne pravi ponovo
+
+
+new_dir.exists - da li postoji direktorijum
+
+new_dir.rmdir() - za brisanje foldera, ali ON MORA DA BUDE PRAZAN
+
+
+
+----
+Ispisivanje u fajl
+
+with open(filename, 'w') as outfile:
+
+	outfile.write('nesto')
+
+
+npr.
+
+UPISIVANJE JEDNOG PO JEDNOG FAJLA U PO JEDAN RED
+with open(filename, 'w') as outfile:
+	for i in nesto:
+		outfile.write(str(i) + '\n')
+		
+		
+CELU KOLEKCIJU MOZEMO UPISATI I BEZ FORA OVAKO
+
+with open(filename, 'w') as outfile:
+	outfile.writelines([str(b) + '\n' for b in bands])
+	
+-------------------------
+Citanje iz fajla
+
+
+with open(filename, 'r') as infile:
+	lines = ''
+	while True:
+		line = infile.readline()
+		if line:  #kraj fajla
+			lines +=line
+		else:
+			break
+
+ili ovako
+
+
+with open(filename, 'r') as infile:
+	lines = infile.read()
+	lines = infile.readlines() #cita linije i vraca listu stringova i dodaje na kraju svakog \n
+	
+	
+----------------------------
+Serijalizacija
+Rad sa binarnim fajlovima .bin
+
+
+
+import pickle
+
+Upisivanje
+
+with open(filename, 'wb') as outfile:
+	pickle.dump(lista, outfile)
+
+Citanje
+
+with open(filename, 'wb') as infile:
+	rezultat = pickle.load(infile)
+------------------------------------
+Rad sa json-om (ovo se zapravo smatra serijalizacijom u pythonu)
+
+from json_tricks import loads, dumps
+
+Upisivanje
+
+json_objekat = dumps(objekat, indent=2) --ovo pretvara u json
+
+indent - OBJASNITI
+
+
+
+Ucitavanja
+
+
+for i in loads(json_objekat)
+	...
+
+
+
+
+
+
+	
+	
