@@ -1,0 +1,398 @@
+Matplotlib
+
+
+Scatterplot
+
+
+Figure - OBJASNI
+
+Axis - OBJASNI
+
+
+PRVO MORAMO OCISTITI DATASET, TAKO DA NEMAMO NAN VREDNOSTI
+
+
+znaci prvo ucitavamo dataset
+
+
+songs = pd.read_csv('dataset.csv')
+
+
+proveravamo da li imamo nan vrednosti
+
+
+songs.isna().sum().sum() -> ako izbaci nulu znaci nema, dok u drugom slucaju
+
+mozemo da proverimo sa
+
+
+songs.loc[songs.isna().any(axis=1)]
+
+ili
+
+songs.loc[songs.notisna().all(axis=1)]
+
+
+i kada ocistimo sacuvamo dataset
+
+
+songs.to_csv('../data/novidataset.csv', index=False)
+
+
+i sada ucitavamo
+
+songs = pd.read_csv('../data/novidataset.csv')
+
+
+
+------------------
+Nekada se desi da su neki podaci string umesto numericki
+
+pa moramo da proverimo sa
+
+type(songs.iloc[0,4]) - da proverimo za prvu pesmu i za kolonu sa indeksom 4
+
+ako jeste onda samo uradimo toint celee kolono
+
+DODAJ PRIMER OVDE
+
+
+------------------------------
+Dobijanje opsega koje cemo postaviti na x i y osama
+
+
+to moze iz songs.describe()
+
+
+songs.describe().loc[['min','max'],['duration', 'danceability']]
+
+
+i sada
+
+ax = plt.axes()
+
+
+OBJASNI OVO
+
+ax.set(xlim=(<from>, <to>), ylim=(<from>, <to>), xlabel='<xlabel>', ylabel='<ylabel>', title='<title>') --ovo je za granice
+
+takodje ovo mozemo sve odvojeno
+
+
+ax.set_title('<title>', fontsize=12, loc='left')
+ax.set_facecolor('<color>')
+ax.set_xlabel('<x_label>', fontsize=8)
+ax.set_ylabel('<y_label>', fontsize=8)
+ax.set_xlim(<m>, <n>)
+ax.set_ylim(<p>, <q>)
+
+
+ax.scatter(<pd.df>['<X>'], <pd.df>['<Y>'], marker='<marker type>', c='<fill color>', edgecolors='<edgecolor>', s=<marker size>); --ovo je za podatke 
+
+
+
+
+za prikaz ide plt.show()
+-----------------------
+Subplotovi - ako zelimov vise plotova umesto jednog
+
+
+fig, ax = plt.subplots(nrows=1, ncols=1, layout='constrained', facecolor='color', figsize=(<x_size>, <y_size>))
+-------------------------
+ax.ticklabel_format(useOffset=False) --ukoliko se ovo ne postavi nekad ce da umesto int notacije dace nam neku eksponencijlanu
+
+
+Tick parameters - menja velicinu ovih vrednosti na osama
+ax.tick_params(axis='x', labelsize=6)
+ax.tick_params(axis='y', labelsize=6)
+
+
+
+IZ VIZUALIZACIJE MOZEMO DA VIDIMO DA LI IMAMO NEKE GRESKE, NPR NESTO STO SAMO STOJI ODVOJENO OD OSTATKA, I MORAMO DA RAZUMEMO DA OBJASNIMO
+-----------------------------------------
+
+Lineplot
+
+ono sto ide na x osi, moramo da sortiramo!!!!
+
+npr songs.release_year.value_counts().sort_index() i iz toga izvucemo values i index
+
+
+ax = plt.axes()
+ax.set(xlim=(<lower limit>, <upper limit>), ylim=(<lower limit>, <upper limit>), xlabel='...', ylabel='...', title='...')
+
+ax.ticklabel_format(useOffset=False)
+
+ax.plot(<x>, <y>, color='...', marker='<marker type>', linewidth=<number>, alpha=<number>)
+
+-------------------------
+VISE AXESA NA JEDNOM FIGUREU
+
+
+fig = plt.figure(figsize=(10, 7), )
+
+ax1 = fig.add_axes([0.1, 0.579, 0.8, 0.35],
+                    xlim=(1989, 2020), ylim=(0, 40),
+                    xlabel='release year', ylabel='counts',
+                    title='Number of songs over the years')
+ax2 = fig.add_axes([0.1, 0.08, 0.8, 0.35],
+                    xlim=(1989, 2020), ylim=(0, 40),
+                    xlabel='release year', ylabel='counts',
+                    title='Number of songs over the years')
+display(type(ax1))
+ax1.ticklabel_format(useOffset=False)
+ax2.ticklabel_format(useOffset=False)
+ 
+ax1.plot(release_year, counts, color='steelblue', linewidth=1.5, alpha=0.8)    # alpha: transparency (0-1)
+ax2.plot(release_year, counts, color='purple', linewidth=1.5, alpha=0.8);      # alpha: transparency (0-1)
+-------------------------------
+Histogram
+
+
+plt.hist(duratiom, bins=40)
+ 
+ 
+ ili sa seabornom
+sb.set_theme(palette='Pastel2')
+
+
+
+
+
+sb.histplot(duratiom, bins=40)
+
+
+
+ali najbolje je ovako
+
+
+fig, ax = plt.subplots(nrows=1, ncols=1, layout='constrained', facecolor='color', figsize=(<x_size>, <y_size>))
+
+OVDE NAPISI UOPSTENE VREDNOSTI
+plt.hist(duration, bins=40, color='teal', edgecolor='red', linewidth=2, alpha=0.7)
+
+ax.set_title('<title>', fontsize=12, loc='left')
+ax.set_facecolor('<color>')
+ax.set_xlabel('<x_label>', fontsize=8)
+ax.set_ylabel('<y_label>', fontsize=8)
+ax.set_xlim(<m>, <n>)
+ax.set_ylim(<p>, <q>)
+ax.set_facecolor('whitesmoke')
+ax.ticklabel_format(useOffset=False)
+ax.tick_params(axis='x', labesize=10)
+ax.tick_params(axis='y', labesize=10)
+
+plt.show()
+
+-------------------------
+U dataset mozemo da dodamo novu kolonu
+
+
+songs['novakolona'] = novakolona_condition
+
+----------------------
+Bargraph
+
+
+df = pd.DataFrame({'speed': speed, 'lifespan': lifespan}, index=index)
+
+
+ax = df.plot.bar()
+
+figsize=(<width>, <height>) (e.g., (6, 6))
+rot=<rotation angle [degrees]> for the x-axis labels
+ylim=(<from>, <to>)
+color={'powerful': 'limegreen', 'not_powerful': 'navajowhite'} (for a list of Matplotlib named colors, see here)
+edgecolor='<color of bin lines>'
+title='<title>'
+xlabel='<xlabel>'
+ylabel='<ylabel>'
+fontsize=<fontsize> (for all text; suitable fontsizes are 10, 12,...)
+stacked=True (the bins for the same x-axis value stacked on top of one another)
+
+
+for c in ax.containers:
+  ax.bar_label(c, label_type='center')
+  
+--------------------------------
+Box plot
+
+za ovo koristimo seaborn
+
+ako hocemo horizontalni onda stavimo x, a ako hocemo vertikalni y
+sb.boxplot(y = songs.duration, palette ='deep6', hue=1, legend = False);
+
+
+ako treba vise podataka
+
+sb.boxplot(data=songs[['acousticness','energy']], orient='v', palette = 'Set3')
+--------------------------
+Violin plot
+
+isto se koristi seaborn
+
+x=songs.loc[songs.release_year < 1995, 'release_year']
+y=songs.duraiton
+
+sb.violin.plot(data=songs, x=x, y=y, hue=x, palette='Set1', legend=False)
+-----------------------
+Heatmape
+
+
+
+
+---------------------
+qcut
+ako treba da podelimo varijable na neke opsege sa jednakim brojim clanova
+
+songs['valence_category'] = pd.qcut(songs.valence, q=5, labels['Very Low', 'Medium', 'High', 'Very High'])
+
+
+
+songs,valence_category.cat.categories  vraca sta ove kategorije koje smo napravili
+
+---------------------
+cut() - da podelimo opseg varijable na odredjen broj podopsega, gde su granice opsega ekvidistantne, pa koliko upadne u njih, ili da bude jednak broj vrednosti u svakom od podopsega
+
+
+ako imamo 5 opsega onda treba da imamo 6 opsega izmedju
+
+
+_, v_mean, _, v_min, v_q1, v_median, v_q3, v_max = songs.descrie()['valence'].values
+
+bin_edges = [v_mean, v_min, v_q1, v_median, v_q3, v_max]
+labels = ['Very Low', 'Medium', 'High', 'Very High']
+
+songs['valence_category'] = pd.cut(songs.valence, bins = bin_edges, labels=labels, include_lowest=True)
+
+-----------------------
+Heatmape
+
+
+moramo da obrnemo ovo 
+
+songs['valence_category'] = pd.Categorical(songs.valence_category, categories= ['Very High, 'High, 'Medium', 'Low', 'Very Low'], ordered = True)
+
+
+kako bi se prirodnije prikazalo u heatmapi
+
+
+MORAMO DA KREIRAMO PIVOT TABELU
+
+values - x osa, columns - y osa, values-vrednosti
+pt = songs.pivot_table(values='acousticness', index='valence_category', columns='release_year')
+
+
+CRTANJE heatmapa pomocu seaborna
+
+plt.figure(layout='constrained', facecolor='navajowhite', figsize=(15,5))
+sb.heatmap(data=<pivot_tabela>, annot=True, fmt='<format_string>', cmap='viridis')
+plt.title('Acousticness',loc='left', color='teal', size=20) - da postavimo naslov
+
+isto i plt.xlabel i plt.ylabel
+
+
+fmt - kao c za stringove
+
+annot - da prikaze vrednosti u celijama
+
+Celije u heatmapi predstavljaju srednju vrednost 
+
+-----------------------------
+PREPORUCENO JE KORISTITI plt.subplots() jer on vraca figure(kao platno iza) i axes
+
+Bargraph preko plt.subplots()
+
+fig, ax = plt.subplots()
+
+ax.bar(x,y)
+ax.set_xlabel('Months')
+ax.set_ylabel('Totaln revenue in millions USD')
+ax.set_title('Total monthly revenue')
+
+plt.show()
+
+
+----------------------
+Kako da dobijemo index najveceg elementa u Series
+
+sales_per_city.idxmax()
+
+
+
+
+----------------
+Linijski plot
+
+figsize =(8,6) - povecanje platna pozadinskog
+
+
+fig, ax = plt.subplots(figsize =(8,6))
+
+marker = simbol koji ce da se pojavi na tackama
+
+ax.plot(x,y, marker='*')
+
+ax.set_xticks(range(0,24)
+ax.set_xlabel("nesto")
+ax.set_ylabel("nesto")
+
+
+prikazivanje grida
+
+ax.grid(visible = True, which='major', axis='both', color='lightgrey')
+---------------------------------
+Horizontalni bar
+
+ax_tr.barh(products, total_revenue)
+
+
+---------
+CRTANJE VISE GRAFOVA NA POMOCU SUBPLOTA
+
+sales_per_product.sort_values(by='Total_Revenue', inplace=True)
+products = sales_per_product.index.tolist()
+sold_quantity = sales_per_product.Quantity_Ordered.tolist()
+total_revenue = sales_per_product.Total_Revenue.tolist()
+
+fig, (ax_tr, ax_sq) = plt.subplots(nrows=1, ncols=2, figsize=(7, 8), sharey='row')
+
+ovo sharey = 'row' znaci da ce se samo jednom prikazivati labele po y osi tj oba grafikovana ce deliti y osu
+
+
+ax_tr.barh(products, total_revenue)
+ax_tr.set_title('Total product revenue')
+
+ax_sq.barh(products, sold_quantity)
+ax_sq.set_title('Total quantity ordered')
+
+plt.show()
+
+
+-----------------------------
+Ako treba da prikazemo vise grafikona u redovima i kolonama
+to radimo sa
+
+
+fig, ax_grid = plt.subplots(nrows=2, ncols=4, figsize=(14, 9), sharey="all")
+
+row_index = col_index = 0
+
+x = range(1,13)
+
+cmap = pypalettes.load_cmap("Flourite")
+
+for i, state in enumerate(states_ordered):
+    y = state_sales_dict[state].values.tolist()
+    ax_grid[row_index, col_index].bar(x, y, color=cmap(i))
+    ax_grid[row_index, col_index].set_xticks(range(1,13))
+    ax_grid[row_index, col_index].set_title(state, color=cmap(i))
+    ax_grid[row_index, col_index].grid(visible=True, axis='y', color='gray', alpha=0.35)
+    col_index += 1
+    if col_index == 4:
+        col_index = 0
+        row_index = 1
+
+fig.suptitle("Total monthly sales across countries")
+
+plt.show()
