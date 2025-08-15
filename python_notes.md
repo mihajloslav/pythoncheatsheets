@@ -1738,4 +1738,301 @@ Ove beleške pokrivaju ključne Python koncepte od osnovnih tipova podataka do n
 - "Python Tricks" by Dan Bader
 - Real Python website
 
+---
+
+## Napredne tehnike iz dodatka
+
+### Funkcionalno programiranje - Map, Filter i Reduce
+
+Python podržava funkcionalno programiranje kroz map, filter i reduce funkcije. Ove funkcije omogućavaju elegantan kod za transformaciju i filtriranje podataka.
+
+#### Map funkcija
+Map primenjuje funkciju na svaki element u sekvenci i vraća iterator.
+
+```python
+# Map menja svaki element u nešto drugo
+numbers = [1, 2, 3, 4, 5]
+squared = list(map(lambda x: x**2, numbers))  # [1, 4, 9, 16, 25]
+
+# Map sa ugrađenim funkcijama
+strings = ['1', '2', '3', '4']
+integers = list(map(int, strings))  # [1, 2, 3, 4]
+```
+
+#### Filter funkcija
+Filter filtrira elemente na osnovu uslova i vraća iterator.
+
+```python
+# Osnovno filtriranje
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+even_numbers = list(filter(lambda x: x % 2 == 0, numbers))  # [2, 4, 6, 8, 10]
+
+# Kompleksnije filtriranje stringova
+strings = ['Ana', 'Bob', 'Civic', 'deed', 'level']
+threshold = 3
+
+# Stringovi koji počinju i završavaju se istim slovom i imaju više od threshold različitih karaktera
+filtered = list(filter(
+    lambda s: s[0].lower() == s[-1].lower() and len(set(s)) > threshold, 
+    strings
+))
+```
+
+#### Reduce funkcija
+Reduce primenjuje funkciju kumulativno na elemente sekvence - uzima po dva elementa iz liste i primenjuje operaciju.
+
+```python
+from functools import reduce
+
+# Osnovno korišćenje - proizvod svih brojeva
+numbers = [1, 2, 3, 4, 5]
+product = reduce(lambda a, b: a * b, numbers)  # 120
+
+# Kombinovanje sa list comprehension
+def calculate_product(numbers, squared=False):
+    """Računa proizvod brojeva ili njihovih kvadrata"""
+    return reduce(
+        lambda a, b: a * b, 
+        [num**2 if squared else num for num in numbers]
+    )
+
+result_normal = calculate_product([2, 3, 4])      # 24
+result_squared = calculate_product([2, 3, 4], True)  # 576 (4*9*16)
+```
+
+### Napredne OOP tehnike
+
+#### Pristupanje atributima klase
+Atributima klase se može pristupati direktno preko naziva klase:
+
+```python
+class Band:
+    founded_year = 1960  # Klasni atribut
+    genre = "Rock"       # Klasni atribut
+    
+    def __init__(self, name):
+        self.name = name  # Instance atribut
+
+# Pristupanje klasnim atributima
+print(Band.founded_year)  # 1960
+print(Band.genre)         # "Rock"
+
+# Kreiranje instance
+beatles = Band("The Beatles")
+print(beatles.name)           # "The Beatles"
+print(beatles.founded_year)   # 1960 (nasleđuje iz klase)
+```
+
+#### Napredni getteri i setteri sa validacijom
+
+```python
+from datetime import datetime
+
+class Let:
+    poletanje_format = "%Y-%m-%d %H:%M"  # Klasni atribut za format
+    
+    def __init__(self):
+        self.__pasos = None
+        self.__poletanje = None
+    
+    @property
+    def pasos(self):
+        """Getter sa lazy initialization"""
+        try:
+            return self.__pasos
+        except AttributeError:
+            self.__pasos = None
+            return self.__pasos
+    
+    @pasos.setter
+    def pasos(self, value):
+        """Setter sa validacijom za više tipova podataka"""
+        # UVEK U SETERU PROVERI DA LI JE ODGOVARAJUCI TIP PODATAKA
+        
+        # Provera za string format (6 cifara)
+        if isinstance(value, str) and len(value) == 6 and value.isdigit():
+            self.__pasos = value
+            return
+        
+        # Provera za int u određenom opsegu
+        if isinstance(value, int) and 100000 <= value <= 999999:
+            self.__pasos = str(value)
+            return
+        
+        # Ako ništa ne odgovara, baci grešku
+        raise ValueError(f"Pasos mora biti 6-cifreni string ili broj između 100000-999999")
+    
+    @property
+    def poletanje(self):
+        return self.__poletanje
+    
+    @poletanje.setter
+    def poletanje(self, value):
+        """Setter koji konvertuje string u datetime"""
+        if isinstance(value, str):
+            # String pretvara u datetime objekat
+            self.__poletanje = datetime.strptime(value, Let.poletanje_format)
+        elif isinstance(value, datetime):
+            self.__poletanje = value
+        else:
+            raise TypeError("Poletanje mora biti string ili datetime objekat")
+
+# Validacija za više tipova podataka
+def validate_data(value):
+    """Može se proveriti više tipova odjednom"""
+    if isinstance(value, (str, int, float)):  # Tuple tipova
+        return True
+    return False
+```
+
+**Ključni principi za settere:**
+- **Uvek proveri tip podataka** sa `isinstance()`
+- **Validacija pre dodele** - ne dodeljuj nevažeće vrednosti
+- **Podrška za više tipova** kada je logično
+- **Konverzija tipova** kada je bezbedna (npr. int u string)
+
+### Rad sa fajlovima - Kompletni pristup
+
+Pri radu sa fajlovima treba pratiti `FileNotFoundError` i `OSError` exceptione.
+
+#### Kreiranje direktorijuma za rezultate
+```python
+from pathlib import Path
+
+def get_results_dir():
+    """Kreira 'results' direktorijum ako ne postoji"""
+    results_dir = Path.cwd() / 'results'
+    if not results_dir.exists():
+        results_dir.mkdir()
+    return results_dir
+```
+
+#### TXT fajlovi
+```python
+from sys import stderr
+
+def ucitaj_iz_txt_fajla(putanja):
+    """Ucitava linije iz txt fajla sa error handling"""
+    try:
+        with open(putanja, 'r') as fobj:
+            return [line.rstrip('\n') for line in fobj.readlines()]
+    except FileNotFoundError:
+        stderr.write(f"Iz ucitaj_iz_txt_fajla: fajl sa putanjom {putanja} ne postoji\n")
+    except OSError as err:
+        stderr.write(f"Iz ucitaj_iz_txt_fajla: greška pri učitavanju iz {putanja}\n{err}\n")
+    return None
+
+def upisi_u_txt_fajl(lista, putanja):
+    """Upisuje listu stringova u txt fajl"""
+    try:
+        with open(putanja, 'w') as fobj:
+            for linija in lista:
+                fobj.write(f"{linija}\n")
+    except OSError as err:
+        stderr.write(f"Iz upisi_u_txt_fajla: greška pri upisu u {putanja}\n{err}\n")
+```
+
+#### Binary fajlovi (Pickle)
+```python
+import pickle as pkl
+from sys import stderr
+
+def serijalizuj_podatke(podaci, putanja):
+    """Serijalizuje podatke u binary fajl"""
+    try:
+        with open(putanja, 'wb') as fobj:
+            pkl.dump(podaci, fobj)
+    except pkl.PicklingError as err:
+        stderr.write(f"Iz serijalizuj_podatke: Pickling greška\n{err}\n")
+    except OSError as err:
+        stderr.write(f"Iz serijalizuj_podatke: OS greška pri serijalizaciji\n{err}\n")
+
+def deserijalizuj_podatke(putanja):
+    """Deserijalizuje podatke iz binary fajla"""
+    try:
+        with open(putanja, 'rb') as fobj:
+            return pkl.load(fobj)
+    except pkl.PickleError as err:
+        stderr.write(f"Iz deserijalizuj_podatke: Pickle greška pri deserijalizaciji iz {putanja}\n{err}\n")
+    except OSError as err:
+        stderr.write(f"Iz deserijalizuj_podatke: OS greška pri deserijalizaciji iz {putanja}\n{err}\n")
+    return None
+```
+
+#### CSV fajlovi
+```python
+import csv
+from sys import stderr
+
+def ucitaj_iz_csv_fajla(putanja):
+    """Učitava CSV fajl kao listu rečnika"""
+    try:
+        with open(putanja, 'r') as fobj:
+            return list(csv.DictReader(fobj))
+    except OSError as err:
+        stderr.write(f"Iz ucitaj_iz_csv_fajla: greška pri učitavanju iz {putanja}\n{err}\n")
+    return None
+
+def upisi_u_csv(putanja, lista_recnika):
+    """Upisuje listu rečnika u CSV fajl"""
+    try:
+        with open(putanja, 'w', newline='') as fobj:
+            header = tuple(lista_recnika[0].keys())
+            csv_writer = csv.DictWriter(fobj, fieldnames=header)
+            csv_writer.writeheader()
+            
+            for podaci in lista_recnika:
+                csv_writer.writerow(podaci)
+    except OSError as err:
+        stderr.write(f"Greška pri upisu podataka u fajl {putanja}\n{err}\n")
+```
+
+#### Rad sa direktorijumima - pronalaženje CSV fajlova
+```python
+from pathlib import Path
+
+def get_csv_files(fpath: Path) -> list:
+    """Pronalazi sve CSV fajlove u direktorijumu"""
+    if not fpath.is_dir():
+        raise RuntimeError("Input argument is not a directory -> cannot proceed")
+    
+    csv_files = []
+    for item in fpath.iterdir():
+        if not item.is_dir() and item.suffix == '.csv':
+            csv_files.append(item)
+    return csv_files
+
+# Korišćenje
+directory = Path('/path/to/directory')
+csv_files = get_csv_files(directory)
+for csv_file in csv_files:
+    data = ucitaj_iz_csv_fajla(csv_file)
+    # Radi sa podacima...
+```
+
+### Napredne tehnike formatiranja stringova
+
+#### F-string formatiranje brojeva
+```python
+# Zaokruživanje na decimalna mesta
+broj = 3.14159
+print(f"Pi je približno {broj:.2f}")  # "Pi je približno 3.14"
+
+# Formatiranje sa paddingom
+broj = 42
+print(f"Broj: {broj:05d}")  # "Broj: 00042" (padding sa nulama)
+
+# Formatiranje postotaka
+procenat = 0.85
+print(f"Uspešnost: {procenat:.1%}")  # "Uspešnost: 85.0%"
+
+# Formatiranje velikih brojeva
+veliki_broj = 1234567
+print(f"Broj: {veliki_broj:,}")  # "Broj: 1,234,567"
+
+# Kombinovanje različitih formatiranja
+cena = 1234.567
+print(f"Cena: ${cena:,.2f}")  # "Cena: $1,234.57"
+```
+
 Srećno programiranje! 🐍

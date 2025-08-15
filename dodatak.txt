@@ -1,0 +1,155 @@
+Map, filter i reduce OBJASNI SA PRIMERIMA
+
+
+Reduce funkcija
+
+return reduce(lambda a,b: a*b, [num**2 if squared else num for num in numbers])
+
+ovo uzima po dva elementa iz liste i mnozi ih
+
+
+
+
+Filter
+
+return list(filter(lambda s: s[0].lower() == s[-1].lower and len(set(s)) > threshold, strings))
+
+
+
+Map - menja svaki element u nesto
+--------------------
+Atributima klase se pristupa sam
+
+
+NazivKlase.atribut
+---------------------
+value = datetime.strptime(value, Let.poletanje_format)  - ovo string pretvara u string
+--------------------
+
+UVEK U METODI U SETERU PROVERI DA LI JE ODGOVARAJUCI TIP PODATAKA
+
+
+-----------------------------
+kad u setteru upisujes nesto pitaj da li je odgovarajuce tipa podataka sa isinstance(promenljiva, tip_podataka)
+
+
+moze vise tipova podataka sa se proveri
+
+isinstance(promenljiva, (tip1, tip2))
+
+
+
+getere kreiraj ovako
+
+
+@property
+def pasos(self):
+	try:
+		return self.__pasos
+	except AtributeError:
+		self.__pasos = None
+		return self.__pasos
+	
+@pasos.setter
+def pasos(self, value):
+	if isinstance(value, str) and len(value) == 6 and value.isdigit():
+		self.__pasos = value
+		return
+	if isinstance(value, int) and 100000 <= value <= 999999:
+		self.__pasos = str(value)
+		return
+------------------------
+Za fajlove treba da pratimo
+
+FileNowFoundError i OSError
+
+def get_results_dir():
+    results_dir = Path.cwd() / 'results'
+    if not results_dir.exists():
+        results_dir.mkdir()
+    return results_dir
+
+# TXT
+
+def ucitaj_iz_txt_fajla(putanja):
+    try:
+        with open(putanja, 'r') as fobj:
+            return [line.rstrip('\n')  for line in fobj.readlines()]
+    except FileNotFoundError:
+        stderr.write(f"Iz ucitaj_iz_txt_fajla: fajl sa zadatom putanjom {putanja} ne postoji\n")
+    except OSError as err:
+        stderr.write(f"Iz ucitaj_iz_txt_fajla: greska pri ucitavanju podataka iz fajla {putanja} \n {err}\n")
+    return None
+
+def upisi_u_txt_fajl(lista, putanja):
+    try:
+        with open(putanja, 'w') as fobj:
+            for linija in lista:
+                fobj.write(f"{linija}\n")
+    except OSError as err:
+        stderr.write(f"Iz upisi_u_txt_fajla: greska pri upisivanju podataka u fajla {putanja} \n {err}\n")
+
+
+# Binary
+def deserijalizuj_podatke(putanja):
+    try:
+        with open(putanja, 'rb') as fobj:
+            return pkl.load(fobj)
+    except pkl.PickleError as err:
+        stderr.write(f"Iz deserijalizuj_podatke: Pickle greska pri deserijalizaciji podataka iz {putanja} \n{err}\n")
+    except OSError as err:
+        stderr.write(f"Iz deserijalizuj_podatke: OS greska pri deserijalizaciji podataka iz {putanja}\n{err}\n")
+    return None
+
+def serijalizuj_podatke(podaci, putanja):
+    try:
+        with open(putanja, 'wb') as fobj:
+            pkl.dump(podaci, fobj)
+    except pkl.PicklingError as err:
+        stderr.write(f"Iz serijalizuj_podatke: Pickling greska pri serijalizaciji podataka\n{err}\n")
+    except OSError as err:
+        stderr.write(f"Iz serijalizuj_podatke: OS greska pri serijalizaciji podataka\n{err}\n")
+
+
+# CSV
+def ucitaj_iz_csv_fajla(putanja):
+    try:
+        with open(putanja, 'r') as fobj:
+            return list(csv.DictReader(fobj))
+    except OSError as err:
+        stderr.write(f"Iz ucitaj_iz_csv_fajla: greska pri ucitavanju iz csv fajla {putanja} \n {err}\n")
+    return None
+
+def upisi_u_csv(putanja, lista_recnika):
+    try:
+        with open(putanja, 'w', newline='') as fobj:
+            header = tuple(lista_recnika[0].keys())
+            csv_writer = csv.DictWriter(fobj, fieldnames=header)
+            csv_writer.writeheader()
+
+            for podaci in lista_recnika:
+                csv_writer.writerow(podaci)
+    except OSError as err:
+        stderr.write(f"Greska pri upisu podataka u fajl {putanja} \n {err}\n")
+
+DODAJ OVO SVE
+
+
+-----------------------
+ako prolazimo kroz direktorijum sa csv fajlovima
+
+
+def get_csv_files(fpath: Path) -> list:
+	if not fpath.is_dir():
+		raise RuntimeError("The input argument is not a directory -> cannot proceed")
+	csv_files = []
+	for item in fpath.iterdir():
+		if not item.is_dir() and item.suffix == '.csv':
+			csv_files.append(item)
+	return csv_files
+-------------------------
+Formatiranje stringa u fstringu
+
+f"{nesto:.2f}" - ovo zaokruzuje na dve decimale
+
+
