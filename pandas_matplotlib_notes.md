@@ -607,6 +607,32 @@ type(songs.iloc[0, 4])  # Proveriti tip određene vrednosti
 songs['duration'] = pd.to_numeric(songs['duration'], errors='coerce')
 ```
 
+### 🎯 **Objašnjenje matplotlib osnova**
+
+#### Figure vs Axes - ključni koncepti
+```python
+# OBJAŠNJENJE: Figure je kao platno, Axes je grafik na tom platnu
+fig = plt.figure(figsize=(10, 7))  # Figure = platno pozadi
+
+# Kreiranje axes objekata (grafikona)
+ax = plt.axes()  # Jedan grafik na celom Figure
+
+# Preporučeno: plt.subplots() jer vraća i Figure i Axes
+fig, ax = plt.subplots()  # Bolje jer daje kontrolu nad oba
+```
+
+#### Iz vizualizacije možemo otkriti greške
+```python
+# IZ VIZUALIZACIJE MOŽEMO DA VIDIMO DA LI IMAMO GREŠKE:
+# - Outliere (tačke koje stoje odvojeno od ostatka)
+# - Nelogične vrednosti (negativne godine, prevelike cene)
+# - Pattern-e koji ukazuju na probleme u podacima
+
+# Primer: scatter plot za pronalaženje outliera
+ax.scatter(songs['duration'], songs['danceability'])
+# Ako vidiš tačku daleko od ostalih, istražiti tu pesmu!
+```
+
 ---
 
 ## Scatter Plot (Rasejani dijagram)
@@ -966,25 +992,34 @@ songs['valence_category'] = pd.qcut(
     labels=['Very Low', 'Low', 'Medium', 'High', 'Very High']
 )
 
+# Pristupanje kreiranim kategorijama
+print(songs.valence_category.cat.categories)  # Vraća kreiranje kategorije
+
 # cut - podela na grupe sa unapred definisanim granicama  
 _, v_min, v_q1, v_median, v_q3, v_max = songs.describe()['valence'].values
-bin_edges = [v_min, v_q1, v_median, v_q3, v_max]
+bin_edges = [v_min, v_q1, v_median, v_q3, v_max]  # 5 granica za 4 kategorije
 labels = ['Very Low', 'Low', 'Medium', 'High']
 
 songs['valence_category'] = pd.cut(
     songs.valence, 
     bins=bin_edges, 
     labels=labels, 
-    include_lowest=True
+    include_lowest=True  # Uključuje najnižu vrednost u prvi bin
 )
 
-# Promena redosleda kategorija (za logičniji prikaz)
+# Promena redosleda kategorija (za logičniji prikaz u heatmap-u)
 songs['valence_category'] = pd.Categorical(
     songs.valence_category, 
     categories=['Very High', 'High', 'Medium', 'Low', 'Very Low'], 
     ordered=True
 )
 ```
+
+**⚠️ Objašnjenje qcut vs cut:**
+- **qcut**: Svaka kategorija ima približno isti broj elemenata (kvantili)
+- **cut**: Kategorije imaju iste granice, ali različit broj elemenata
+- **include_lowest=True**: Prvi bin uključuje i najnižu vrednost (inače bi bila isključena)
+- **Ako imamo 4 kategorije, treba 5 granica (bin_edges)**
 
 ### Kreiranje pivot tabele
 
@@ -1008,7 +1043,7 @@ plt.figure(layout='constrained', facecolor='white', figsize=(15, 5))
 sb.heatmap(
     data=pt, 
     annot=True,           # Prikaži vrednosti u ćelijama
-    fmt='.2f',            # Format brojeva (2 decimale)
+    fmt='.2f',            # Format brojeva (2 decimale) - kao %.2f za stringove
     cmap='viridis',       # Mapa boja
     cbar_kws={'label': 'Acousticness'}  # Label za color bar
 )
@@ -1017,6 +1052,11 @@ plt.title('Acousticness by Valence and Year', loc='left', color='teal', size=16)
 plt.xlabel('Release Year')
 plt.ylabel('Valence Category')
 plt.show()
+
+# ⚠️ Objašnjenje parametara:
+# annot=True - prikazuje vrednosti u ćelijama heatmap-a
+# fmt - format string za brojeve (isto kao % formatting)
+# Ćelije u heatmap-i predstavljaju srednju vrednost (default aggregation)
 ```
 
 ### Heatmap sa Matplotlib (napredni)
@@ -1203,6 +1243,42 @@ sales_per_city.max()     # Vraća najveću vrednost
 # Isto za minimum
 sales_per_city.idxmin()
 sales_per_city.min()
+```
+
+### 📊 **Dodatne napredne pandas tehnike**
+
+#### Filtriranje podataka sa isin()
+```python
+# Filtriranje po određenim vrednostima
+songs = songs.loc[songs.album_type.isin(['studio album', 'single', 'extended play'])]
+
+# Kreiranje opsega godina za filtriranje
+early_years = [y for y in range(1989, 1995)]  # Lista godina 1989-1994
+songs.loc[songs.release_year.isin(early_years)]
+```
+
+#### Dodavanje novih kolona u dataset
+```python
+# Kreiranje nove kolone na osnovu uslova
+songs['nova_kolona'] = nova_kolona_condition
+
+# Primer: dodavanje era kolone
+songs['era'] = songs.release_year.apply(
+    lambda x: '80s' if x < 1990 
+             else '90s' if x < 2000 
+             else '2000s'
+)
+```
+
+#### Provera referenci vs kopija
+```python
+# ⚠️ VAŽNO: Razlika između reference i kopije
+sales = all_sales           # ❌ Samo referenca - menjanja utiču na original
+sales = all_sales.copy()    # ✅ Prava kopija - nezavisan objekat
+
+# Provera da li su isti objekti
+print(id(sales) == id(all_sales))    # False za kopiju, True za referencu
+print(sales is all_sales)            # False za kopiju, True za referencu
 ```
 
 ### 5. Spajanje i analiza više dataset-ova
