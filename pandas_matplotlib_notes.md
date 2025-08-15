@@ -169,6 +169,79 @@ missing_cols = i[i]             # Samo True vrednosti
 missing_cols.index              # Nazivi kolona sa nedostajućim
 ```
 
+### 🔍 **Boolean Indeksiranje - i[i] Tehnika**
+
+Ovo je jedna od najkorisnijih tehnika u pandas-u koju mnogi ne razumeju na početku:
+
+```python
+# VRLO VAŽNA TEHNIKA: Dobijanje samo True vrednosti iz boolean Series
+i = songs.isna().sum() > 0  # Boolean Series (True/False)
+
+# i[i] - Genijalan trik za dobijanje samo True vrednosti!
+print(i[i])           # Prikazuje samo kolone sa True (imaju nedostajuće podatke)
+print(i[i].index)     # Imena kolona koje imaju nedostajuće podatke
+print(i[i].values)    # Array samih True vrednosti
+
+# Praktični primeri:
+missing_cols = songs.isna().sum() > 0
+print("Kolone sa nedostajućim podacima:")
+print(missing_cols[missing_cols])  # Samo kolone gde je True
+
+# Ekvivalentno je sa:
+print(missing_cols[missing_cols == True])  # Duži način
+print(missing_cols.loc[missing_cols])      # Eksplicitniji način
+```
+
+**Objašnjenje i[i] logike:**
+- `i` je Boolean Series (True/False vrednosti) 
+- `i[i]` uzima Series `i` i koristi isti taj `i` kao boolean masku
+- Pandas čita ovo kao: "uzmi elemente iz `i` gde je `i` True"
+- Rezultat: zadržava samo elemente gde je uslov True
+- Ovo je pandas idiom koji značajno skraćuje kod!
+
+**Još primera i[i] tehnike:**
+```python
+# Primer 1: Kolone sa velikim brojem unique vrednosti
+high_cardinality = songs.nunique() > 100
+high_card_cols = high_cardinality[high_cardinality]
+print("Kolone sa puno unique vrednosti:", high_card_cols.index.tolist())
+
+# Primer 2: Numeričke kolone sa outlierima  
+numeric_cols = songs.select_dtypes(include=['number']).columns
+outlier_check = {}
+for col in numeric_cols:
+    q75 = songs[col].quantile(0.75)
+    q25 = songs[col].quantile(0.25)
+    iqr = q75 - q25
+    outliers_exist = ((songs[col] < (q25 - 1.5 * iqr)) | 
+                     (songs[col] > (q75 + 1.5 * iqr))).any()
+    outlier_check[col] = outliers_exist
+
+outlier_series = pd.Series(outlier_check)
+cols_with_outliers = outlier_series[outlier_series]  # i[i] tehnika!
+
+# Primer 3: Kolone sa malim brojem unique vrednosti (kategoričke kandidati)
+low_cardinality = songs.nunique() < 10
+categorical_candidates = low_cardinality[low_cardinality]
+print("Kolone koje mogu biti kategoričke:", categorical_candidates.index.tolist())
+```
+
+**Zašto je i[i] bolji od alternativa:**
+```python
+# ❌ Duži način
+missing_cols = songs.isna().sum() > 0
+result = missing_cols[missing_cols == True]
+
+# ❌ Još duži način  
+missing_cols = songs.isna().sum() > 0
+true_indices = missing_cols[missing_cols == True].index
+result = missing_cols[true_indices]
+
+# ✅ Pandas idiom - kratak i elegantan
+missing_cols = songs.isna().sum() > 0
+result = missing_cols[missing_cols]  # i[i] tehnika
+```
+
 ### Rad sa nedostajućim vrednostima
 
 ```python
