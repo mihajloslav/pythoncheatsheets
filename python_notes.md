@@ -58,7 +58,7 @@ print(print_ringo.__doc__)
 - **Modul**: Python fajl sa definisanim funkcijama i klasama, bez izvršnih naredbi
 - **Skripta**: Python fajl sa izvršnim naredbama
 
-### Uslovni izvršavanje koda
+### Uslovno izvršavanje koda
 ```python
 if __name__ == '__main__':
     print_ringo()  # Izvršava se samo ako je skripta direktno pokrenuta
