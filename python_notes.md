@@ -6,7 +6,9 @@ Python je interpretiran, objektno-orijentisan programski jezik koji se odlikuje 
 
 ### Fundamentalni principi
 - **U Python-u je sve objekat** - brojevi, stringovi, funkcije, klase, sve su objekti sa svojim metodama i atributima
-- **Paket** - folder koji sadrži `__init__.py` fajl (npr. folder `python` sa `__init__.py`). Ovaj fajl govori Python-u da tretira direktorijum kao paket
+- **Paket** - folder koji sadrži `__init__.py` fajl (npr. folder `python` sa `__init__.py`). Ovaj fajl govori Python-u da tretira direktorijum kao paket. Kolekcija modula u direktorijumu sa __init__.py
+- **Modul** = fajl sa definicijama funkcija/klasa, bez pozivanja tih funkcija.
+- **Skripta** = fajl sa definicijama i izvršnim kodom koji poziva funkcije.
 
 ### Osnovne komande i shortcuts
 
@@ -23,9 +25,6 @@ projekt/
 ├── blanknotebooks/     # Prazni notebook fajlovi
 └── blankscripts/       # Prazne skripte
 ```
-
-### Git integracija
-- **Dodavanje na GitHub**: Selektovati fajlove → Desni klik → Add
 
 ---
 
