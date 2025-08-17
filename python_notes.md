@@ -83,7 +83,7 @@ string2 = "Tekst sa dvostrukim navodnicima"
 ```python
 ime = "Zoran"
 godine = 25
-print("Zoran ima %d godina %s" % (godine, ime))
+print("%s ima %d godina." % (godine, ime))
 ```
 
 #### 2. Raw stringovi (preskoče escape karaktere)
