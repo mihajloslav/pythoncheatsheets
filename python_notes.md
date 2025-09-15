@@ -423,6 +423,10 @@ Zip funkcija je jedan od najkorisnijih Python alata za rad sa više sekvenci ist
 
 **Važno**: Zip pravi parove do dužine najkraće sekvence - ako su liste različite dužine, višak elemenata se ignoriše!
 
+Razlika u odnosu na `itertools.zip_longest`:
+- `zip_longest(a, b, fillvalue='?')` nastavlja do duže sekvence i popunjava nedostajuće elemente zadatim `fillvalue`.
+- Obe funkcije vraćaju ITERATOR (potrošiv) – ako ti trebaju podaci više puta: `pairs = list(zip(l1, l2))`.
+
 ```python
 l1 = ["M", "Na"]
 l2 = ["y", "me"]  
@@ -465,6 +469,22 @@ print(round(2.5))  # 2 (zaokružuje na paran broj)
 
 # Zaokruživanje dužine liste
 print(round(len(lista)))
+
+# Bankarsko (half-to-even) objašnjenje:
+# Kod velikog broja agregacija smanjuje sistematsku grešku jer .5 vrednosti
+# idu na najbliži PARAN broj. Ako želiš "klasično" half-up pravilo:
+import math
+def round_half_up(x):
+    return math.floor(x + 0.5)
+
+round_half_up(2.5)  # 3
+round_half_up(3.5)  # 4
+
+# Razlika round vs formatiranje: round vraća broj i utiče na dalja računanja.
+# Formatiranje (f"{x:.2f}") vraća string – koristi se za prikaz.
+# Primer binarne reprezentacije floating point brojeva:
+v = 2.675
+print(f"{v:.2f}")  # 2.67 (zbog binarne aproksimacije)
 ```
 
 ### All i Any funkcije
@@ -481,6 +501,13 @@ def has_no_lowercase(word):
 # Alternativa za palindrom
 def is_palindrome_alt(text):
     return text == text[::-1]
+
+# Semantički idiomi:
+# all(iterable) -> univerzalni kvantifikator ("za svaki")
+# any(iterable) -> egzistencijalni kvantifikator ("postoji")
+# Idiom bez kreiranja liste (generator expression):
+sva_velika = all(ch.isupper() for ch in "ABC")
+ima_cifru = any(ch.isdigit() for ch in "a1b")
 ```
 
 ---
@@ -648,6 +675,34 @@ sorted_by_keys = dict(sorted(d.items(), key=itemgetter(0)))
 
 # Sortiranje po vrednostima (indeks 1)  
 sorted_by_values = dict(sorted(d.items(), key=itemgetter(1)))
+
+#### 2a. Korišćenje operator.attrgetter (za objekte)
+```python
+from operator import attrgetter
+
+class Igrac:
+    def __init__(self, ime, poeni, tim):
+        self.ime = ime
+        self.poeni = poeni
+        self.tim = tim
+
+igraci = [
+    Igrac('Mika', 15, 'A'),
+    Igrac('Pera', 22, 'B'),
+    Igrac('Lena', 22, 'A'),
+    Igrac('Ana', 9,  'C')
+]
+
+# Sortiranje po (poeni, ime)
+for ig in sorted(igraci, key=attrgetter('poeni', 'ime')):
+    print(ig.ime, ig.poeni)
+
+# Mešoviti smerovi (opadajuće poeni, rastuće ime) – koristi tuple ključ:
+for ig in sorted(igraci, key=lambda x: (-x.poeni, x.ime)):
+    print(ig.ime, ig.poeni)
+```
+
+> attrgetter radi za atribute ono što itemgetter radi za pozicije / ključeve.
 ```
 
 #### 3. Korišćenje lambda funkcija
@@ -2035,3 +2090,7 @@ print(f"Cena: ${cena:,.2f}")  # "Cena: $1,234.57"
 ```
 
 Srećno programiranje! 🐍
+
+---
+
+

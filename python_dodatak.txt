@@ -1,0 +1,311 @@
+spisak IMPORTA:
+
+		from random import randint
+	
+		from collections import defaultdict
+	
+		from operator import itemgetter
+
+		from operator import attrgetter
+	
+		from itertools import zip_longest
+	
+		from statistics import mean
+	
+		from collections import Counter
+	
+		from functools import reduce
+	
+		from datetime import datetime
+	
+		from sys import stderr
+	
+		from enum import Enum	
+		
+		import re
+
+		from pathlib import Path
+
+		import csv
+
+		import pickle as pkl
+
+		import pandas as pd
+
+		import matplotlib.pyplot as plt
+
+		import pypalettes
+
+		import squarify
+	
+
+-----------------------------------------------------------------------------------------------------
+
+
+HELPERI:
+
+
+DATA_DIR = Path.cwd() / 'data' 
+
+def napravi_rezultati_dir():
+    rezultati_dir = Path.cwd() / 'rezultati'
+    if not rezultati_dir.exists():
+        rezultati_dir.mkdir()
+    return rezultati_dir
+
+
+def ucitaj_iz_txt_fajla(putanja):
+    try:
+        with open(putanja, 'r') as fobj:
+            return [line.rstrip('\n')  for line in fobj.readlines()]
+    except FileNotFoundError:
+        stderr.write(f"fajl sa putanjom: {putanja}, ne postoji\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    return None
+
+
+def upisi_u_txt_fajl(lista, putanja):
+    try:
+        with open(putanja, 'w') as fobj:
+            for linija in lista:
+                fobj.write(f"{linija}\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+
+
+def deserijalizuj_podatke(putanja):
+    try:
+        with open(putanja, 'rb') as fobj:
+            return pkl.load(fobj)
+    except pkl.PickleError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    return None
+
+
+def serijalizuj_podatke(podaci, putanja):
+    try:
+        with open(putanja, 'wb') as fobj:
+            pkl.dump(podaci, fobj)
+    except pkl.PicklingError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+
+
+def ucitaj_iz_csv_fajla(putanja):
+    try:
+        with open(putanja, 'r') as fobj:
+            return list(csv.DictReader(fobj))
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    return None
+
+
+def upisi_u_csv(putanja, lista_recnika):
+    try:
+        with open(putanja, 'w', newline='') as fobj:
+            header = tuple(lista_recnika[0].keys())
+            csv_writer = csv.DictWriter(fobj, fieldnames=header)
+            csv_writer.writeheader()
+
+            for podaci in lista_recnika:
+                csv_writer.writerow(podaci)
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+
+-----------------------------------------------------------------------------------------------------
+
+
+input("") -> ispisuje se u konzoli i sluzi za unos sa tastature, vraca ono sto je uneto kao str
+
+divmod(deljenik, delilac) -> vraca redom: rezultat, ostatak
+
+sorted(lista, reverse= False) -> vraca sortiranu listu
+
+min(lista) -> vraca najmanji element iz liste
+
+max(lista) -> vraca najveci elemengt iz liste
+
+abs(broj) -> vraca apsolutnu vrednost broja
+
+list.append(broj) -> dodaje broj u listu
+
+print(f"Najmanji broj: {min_br}") -> dodaje se f pre "" ako printujemo promenljivu
+
+
+len(lista) -> vraca "broj elemenata" tj duzinu liste
+
+print("""    """) -> za ispis u vise redova
+
+randint(a, b) -> vraca "rendom" broj od a do b
+
+string.isdigit() -> vraca True/False u zavisnosti da li je karakter/string neka cifra
+
+zip(lista1, lista2) -> vraca ITERATOR (ne listu) taplova koji su dobijeni spajanjem elemenata dve liste u taplove po indeksu, i to po kracoj listi (ako je jedna lista duza, ti "visak" elementi se gube)
+
+[LIST KOMPREHENSN!!!] -> vraca listu, prvo ide element koji se vraca (tj kog je on oblika/formata), zatim for pa isti taj element (ugl bez funkcija) pa in pa neki range i na kraju if
+
+string.lower() ili karakter.lower() -> pretvara karakter ili svaki karakter stringa u mala slova
+
+karakter.islower() -> vraca True/False u zavisnosti da li je karakter malo slovo
+
+round(broj) -> zaokruzuje (pravo zaokruzivanje, menja taj broj nadalje u kodu), ali tako da ako treba da zaokruzi x.5 onda zaokruzuje na najblizi paran broj
+
+print(f"{broj:.2f}") -> ne zaokruzuje broj vec ga samo prikazuje sa 2 decimale i odseca ostale, ali promenljiva zadrzava svoju vrednost
+
+range(*nesto*) -> nesto moze biti interval od nekog broja a do b ili moze biti samo jedan broj
+
+all(lista) -> proverava da li je svaki element liste True, kao ZA SVAKI, ne mora lista da bude
+
+any(lista) -> proverava da li je bar jedan element liste True, kao POSTOJI, ne mora lista da bude
+
+lista[0] -> poziva prvi element liste
+
+string.strip() -> iseca sa pocetka i kraja stringa uneti karakter (ili string)
+
+string.split() -> deli string u listu stringova, deli ga po unetom karakteru
+
+",".join(lista) -> kad je u printu, istampaju se elementi liste spojeni unetim karakterom (stringom)
+
+reversed(lista) -> obrne listu, pa moze da se u petlji ide od poslednjeg do prvog elementa
+
+str(promenljiva) ili int(promenljiva) itd -> pretvara promenljuvu u dati osnovni tip podataka
+
+d = dict() ... d[i]= nesto -> "nesto" postaje jedna od vrednosti (i-ta vrednost) recnika
+
+zip_longest(lista1, lista2, fillvalue="nepoznato") -> spaja dve liste kao zip ali ne racuna koja je kraca nego koja se duza, a "nedostajuci" elementi krace liste se ispune sa fillvalue
+
+sorted(recnik.items(), key = itemgetter(1)) -> sortiraj recnik po VREDNOSTIMA
+
+d = defaultdict(int) ili d = dict() -> skoro uvek se koristi defaultdict()
+
+recnik[kljuc].append(vrednost) -> slicno kao dodavanje elemenata u listu
+
+recnik.items() -> za pristupanje kljucevima i vrednostima (pojedinacnim delovima tj ajtemima) recnika
+
+recnik.keys() i recnik.values() -> vracaju kljuceve odnosno vrednosti iz recnika ali ne bas kao listu, zato mora da se napise list() ispred ako treba da budu lista
+
+mean(lista) -> vraca prosecnu vrednost elemenata liste
+
+max(recnik/lista_recnika, key = itemgetter('kljuc')) -> za liste recnika i recnike mora da se stavi i key = i onda ili itemgetter ili lambda (itemgetter je bolji)
+
+string.rstrip('znakovi') -> stripuje date znakove ali krenuvsi s desna
+
+lista.extend(list) -> extend radi kao append ali append moze da doda samo jedan element u listu/recnik, dok extend moze da doda vise elemenata odjednom (kao da dodaje listu list)
+
+string.rsplit('znak', maxsplit = broj) -> splituje ali krenuvsi s desna i splituje samo do limita koji mu se postavi u vidu broja
+
+def funkcija (*brojevi) -> znaci da funkcija prima neki broj argumenata koji nije unapred poznat
+
+string[-1] -> poslednji karakter stringa; generalno je samo poslednji clan (moze da bude i lista)
+
+reduce(lambda a,b : a x b, lista) -> bukvalno umesto zareza izmedju svakog elementa liste, ubacuje se operacija x (npr. + ili *)
+
+filter(lambda: string: "neki uslov sa stringom", lista) -> filter bukvalno filtrira datu listu po nekom kriterijumu koji se zadaje pomocu funkcije lambda; filter vraca iterator (moze se proci kroz njega pomocu petlje npr for, ali nije eksplicitno lista), pa se skoro uvek pise list(filter(...))
+
+map(lambda element : "funkcija", lista) -> izvrsi funkciju definisanu u lambda nad svakim elementom date liste; isto vraca iterator pa treba list(map(...)) ili dict(map(...))
+
+dekorator -> pise se po sablonu (koji je dat) i uglavnom se koristi za merenje vremena; izvrsava nesto pre funkcije koju dekorise i nesto posle nje 
+
+class atribute -> pise se van __init__ konstruktora, a u klasi
+
+datetime_format -> %Y je godina, %m je mesec, %d je dan, %H je sat i %M je minut; sve ovo se pise u stringu dakle pod "" ili ''
+
+def __init__(self, *atributi) -> ovo je konstruktor i tu pisemo sve atribute i sve sto treba da sadrzi klasa (osim klas atributa) i svi atributi u funkciji se pisu sa prefiksom self.naziv_atributa; atributi (tj argumenti) mogu imati i odrazumevanu vrednost pa se to napise kao arg = True (npr); bice jasno sta ide u argumente a sta ne ide
+
+@property
+def atr_geter(self):
+	try:
+		return self.__atr
+	except AttributeError:
+		self.__ruta = None
+		return self.__ruta
+	
+@atr.setter
+def atr(self, vrednost):
+	if isinstance(tip_podatka, str) and "USLOV":
+		self.__atr = vrednost
+		return
+
+self.__atr -> ovo se kuca uvek i dosledno kad se radi unutar klase ciji je atribut atr; funkcionalno unutar iste klase, self.atr i self.__atr rade istu stvar
+
+isinstance(promenljiva, str/int/Klasa/...) -> proverava da li je promenljiva objekat date klase/ tipa podatka (proverava tip objekta)
+
+obj not in [...] -> not in provarava (i vraca boolean vrednost) da li je data promenljiva u nekoj listi (moze i string ili range)
+
+stderr.write("GRESKA") -> ispisuje poruku o gresci
+
+datetime.now() -> vrlo koristan; datetime MOZE da se oduzima tj samo se ukuca minus; takodje vremena se porede samo znakovima poput > i <
+
+@classmethod
+def alt_konstruktor(cls, atr):
+	if ... :
+		return cls("svi neophodni argumenti za originalni konstruktor")
+	stderr.write("GRESKA")
+	return None
+
+datetime.strptime(string, Klasa.odgovarajuci_format) -> pretvara string koji je u odgovarajucem formatu u datetime u takodje adekvatnom formatu i vraca datetime
+
+datetime.strftime(datetime, Klasa.odgovarajuci_format) -> pretvara datetime koji je u datom formatu u string koji ce biti u istom formatu i vraca string
+
+
+dani = datum.days
+sati, ostatak_sekundi = divmod(datum.seconds, 3600) ->PRISTUPANJE: DANIMA SATIMA MINUTIMA I SEKUNDAMA
+minuti = ostatak_sekundi // 60
+
+
+ITERATOR:
+
+    def __iter__(self):
+        self.__next_index = 0
+        return self
+
+    def __next__(self):
+        if self.__next_index == len(self.lista_kroz_koju_iterira):
+            raise StopIteration
+        sledeci = self.lista_kroz_koju_iterira[self.__next_index]
+        self.__next_index += 1
+        return sledeci
+
+
+ENUM:
+
+class ImeKlase(Enum):
+    ENUM1 = 'string1' 
+    ENUM2 = 'string2'
+    ENUM3 = 'string3'
+    
+@staticmethod -> pise se iznad def dela funkcije kao dekorator i cini funkciju staticnom
+
+raise Error -> isto kao u javi throw new Error
+
+type() -> radi slicnu stvar kao isinstance(), ali je malo gori, preporuka: isinstance()
+
+return "string".super().__str__() -> kada treba da se vrati toString, ali je klasa nasledjena i ako postoji toString metoda u primarnoj klasi onda ovo moze da skrati posao
+
+
+def __init__(self, arg = difoltna_vrednost, **kwargs):
+	super().__init__(**kwargs)
+|
+|
+|________> uvek se pise u klasu koja nasledjuje nadklasu tj uvek se pise u podklasu	
+
+
+re.split('[...]', string) -> isto kao split(), ali ovde nije metoda za str nego je funkcija koja vraca listu i kao ulazne argumente (parametre) prima prvo kriterijume (moze vise njih) po kojima se splituje i drugo prima string koji se splituje
+
+sorted(lista, key = attrgetter('naziv_atributa_klase'), reverse = True) -> sortiraj listu po datom ATRIBUTU i to po OBRNUTOM redosledu
+
+generator -> funkcija koja vraca jedan po jedan objekat pomocu naredbe yield; za razliku od normalne funkcije koja vraca vrednost pomocu naredbe return, kojim se zatim i zavrsava celokupan rad funkcije, generator moze da sadrzi yield u petlji i da yield u svakoj iteraciji vraca neku vrednost (objekat), a da se petlja i dalje izvrsava bez prekidanja do kraja rada petlje 
+
+string.replace('stari_znak', 'novi_znak') -> zamenjuje stari znak u stringu novim znakom 
+
+recnik{
+	kljuc1 : vrednost1,
+	kljuc2 : vrednost2,	-> ovako se stvara novi recnik
+	"kljuc3" : vrednost3
+}
+
+_____________________________________________________________________________________________________________________
