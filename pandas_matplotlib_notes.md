@@ -27,6 +27,10 @@ plt.style.use('classic')
 sb.set_theme(palette='Pastel2')
 ```
 
+---
+
+<!-- Naprednije sekcije biće pomerene niže u dokument da bi osnove išle prve -->
+
 ### Magic funkcije u Jupyter Notebook
 
 ```python
@@ -576,6 +580,88 @@ colors = plt.cm.viridis(numeric_labels / len(unique_categories))
 
 # Primer korišćenja u scatter plot-u
 plt.scatter(df['x'], df['y'], c=colors)
+```
+
+---
+
+## (Naprednije) Kombinovanje i integracija podataka
+### Merge / Join / Concat
+```python
+pd.merge(df_left, df_right, on='id', how='inner')
+pd.merge(df_left, df_right, on='id', how='left')
+pd.merge(df_left, df_right, left_on='id1', right_on='id2', how='outer')
+
+df_left.join(df_right, how='inner')
+df_left.join(df_right.set_index('id'), on='id')
+
+pd.concat([df1, df2], axis=0, ignore_index=True)  # vertikalno
+pd.concat([df1, df2], axis=1)                     # horizontalno
+```
+Kratko:
+- merge: ključevi (najčešći slučaj)
+- join: indeks vs kolona
+- concat: slaganje (redovi) ili kombinovanje (kolone)
+
+## (Naprednije) Preoblikovanje strukture (reshaping)
+### pivot / pivot_table / melt
+```python
+df.pivot(index='country', columns='year', values='gdp')            # striktno
+df.pivot_table(index='country', columns='year', values='gdp', aggfunc='sum', fill_value=0)
+df.melt(id_vars=['country'], var_name='year', value_name='gdp')    # unpivot
+```
+### Crosstab
+```python
+pd.crosstab(df['segment'], df['outcome'], normalize='index')
+```
+### Explode (list -> redovi)
+```python
+df_expl = df.explode('tags')
+```
+### Napredni value_counts
+```python
+df['country'].value_counts(normalize=True)
+df[['col1','col2']].value_counts(dropna=False)
+```
+
+## (Naprednije) Optimizacija i tipovi
+### Kategorije (category dtype)
+```python
+df['city'] = df['city'].astype('category')
+df['city'].cat.reorder_categories([...], ordered=True)
+```
+
+## (Naprednije) Analitičke tehnike
+### Korelaciona matrica
+```python
+corr = df.select_dtypes(include='number').corr()
+sb.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', vmin=-1, vmax=1)
+```
+### Rolling / EWM
+```python
+df['ma7'] = df['sales'].rolling(7, min_periods=1).mean()
+df['ewm14'] = df['sales'].ewm(span=14, adjust=False).mean()
+```
+### Resample i datum slice
+```python
+df.index = pd.to_datetime(df['date'])
+monthly = df['sales'].resample('M').sum()
+df.loc['2024-05']
+```
+### Detekcija outlier-a (IQR)
+```python
+Q1, Q3 = df['val'].quantile([0.25, 0.75])
+IQR = Q3 - Q1
+mask = (df['val'] < Q1 - 1.5*IQR) | (df['val'] > Q3 + 1.5*IQR)
+outliers = df[mask]
+```
+### Kardinalnost i memorija
+```python
+high_card = df.nunique().sort_values().tail(10)
+mem_mb = (df.memory_usage(deep=True)/1024**2).sort_values()
+```
+### Stilizacija (prikaz)
+```python
+df.style.format({'price': '{:,.2f}', 'rate': '{:.2%}'}).background_gradient(cmap='Greens')
 ```
 
 ---
