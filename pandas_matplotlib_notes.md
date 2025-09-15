@@ -124,6 +124,12 @@ songs.rename({
 # inplace=True - menja originalni DataFrame
 ```
 
+```python
+# Alternativa: direktno postavljanje svih naziva kolona
+# Napomena: broj elemenata mora tačno da odgovara broju kolona
+songs.columns = ['track', 'artists', 'album', 'album_type', 'duration', 'release_year', *songs.columns.tolist()[6:]]
+```
+
 ### Promena redosleda kolona
 
 ```python
@@ -391,8 +397,12 @@ songs.groupby('release_year').duration.agg(['count', 'mean']).sort_values(by='co
 sales_per_city_product = sales.groupby(['Product', 'Purchase_City']).Total_Revenue.sum()
 # Ovo vraća Series sa MultiIndex
 
+# Agregacija više kolona odjednom nakon groupby
+agg_df = df.groupby('kolona1')[['kolona2', 'kolona3']].sum()
+
 # Pretvaranje MultiIndex u DataFrame
 sales_per_city_product.unstack()  # Kolone postaju druga dimenzija grupiranja
+sales_per_city_product.unstack(fill_value=0)  # Popuni nedostajuće kombinacije
 ```
 
 ---
@@ -473,6 +483,19 @@ sales['Order_Date'] = pd.to_datetime(
 sales['Month'] = sales.Order_Date.dt.month
 sales['Year'] = sales.Order_Date.dt.year
 sales['DayOfWeek'] = sales.Order_Date.dt.dayofweek
+```
+
+```python
+# Sigurna konverzija u celobrojni tip
+# 1) Najpre konvertuj u numerički i reši NaN vrednosti
+df['col'] = pd.to_numeric(df['col'], errors='coerce')
+df['col'] = df['col'].fillna(0)
+
+# 2) Zatim kastuj u int (bezbedno jer nema NaN)
+df['col'] = df['col'].astype(int)
+
+# Alternativa: koristi nullable Int64 koji dozvoljava NaN
+df['col'] = pd.to_numeric(df['col'], errors='coerce').astype('Int64')
 ```
 
 ---
@@ -1171,6 +1194,13 @@ cbar.ax.set_ylabel("Total Revenue (USD)", rotation=-90, va="bottom")
 
 plt.title('Revenue Heatmap')
 plt.show()
+
+# (Opcionalno) Dodavanje vrednosti u svaku ćeliju heatmap-a
+# Napomena: ovo radi kada imaš matrični numpy array `data`
+data = df.values
+for r in range(len(products)):
+    for c in range(len(cities)):
+        ax.text(c, r, f"{data[r, c]:.2f}", va='center', ha='center', color='white')
 ```
 
 ---
