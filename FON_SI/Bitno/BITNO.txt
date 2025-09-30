@@ -37,7 +37,7 @@ i onda samo pozovete te funkcije u okviru notebookua i ono što vam vrate prika�
 imate primer u julskom roku:
 
 -------------------------------------------------------
-Julski rok 2025 pandas
+Julski rok 2025 pandas (IMATE URAĐENO u jul2025 folderu)
 
 Bilo je da se očiste fajlovi od NaN vrednosti po KOLONAMA
 
