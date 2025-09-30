@@ -1,0 +1,655 @@
+spisak IMPORTA:
+
+		from random import randint
+	
+		from collections import defaultdict
+	
+		from operator import itemgetter
+
+		from operator import attrgetter
+	
+		from itertools import zip_longest
+	
+		from statistics import mean
+	
+		from collections import Counter
+	
+		from functools import reduce
+	
+		from datetime import datetime
+	
+		from sys import stderr
+	
+		from enum import Enum	
+		
+		import re
+
+		from pathlib import Path
+
+		import csv
+
+		import pickle as pkl
+
+		import pandas as pd
+
+		import matplotlib.pyplot as plt
+
+		import pypalettes
+
+		import squarify
+	
+
+-----------------------------------------------------------------------------------------------------
+
+
+HELPERI:
+
+
+DATA_DIR = Path.cwd() / 'data' 
+
+def napravi_rezultati_dir():
+    rezultati_dir = Path.cwd() / 'rezultati'
+    if not rezultati_dir.exists():
+        rezultati_dir.mkdir()
+    return rezultati_dir
+
+
+def ucitaj_iz_txt_fajla(putanja):
+    try:
+        with open(putanja, 'r') as fobj:
+            return [line.rstrip('\n')  for line in fobj.readlines()]
+    except FileNotFoundError:
+        stderr.write(f"fajl sa putanjom: {putanja}, ne postoji\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    return None
+
+
+def upisi_u_txt_fajl(lista, putanja):
+    try:
+        with open(putanja, 'w') as fobj:
+            for linija in lista:
+                fobj.write(f"{linija}\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+
+
+def deserijalizuj_podatke(putanja):
+    try:
+        with open(putanja, 'rb') as fobj:
+            return pkl.load(fobj)
+    except pkl.PickleError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    return None
+
+
+def serijalizuj_podatke(podaci, putanja):
+    try:
+        with open(putanja, 'wb') as fobj:
+            pkl.dump(podaci, fobj)
+    except pkl.PicklingError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+
+
+def ucitaj_iz_csv_fajla(putanja):
+    try:
+        with open(putanja, 'r') as fobj:
+            return list(csv.DictReader(fobj))
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+    return None
+
+
+def upisi_u_csv(putanja, lista_recnika):
+    try:
+        with open(putanja, 'w', newline='') as fobj:
+            header = tuple(lista_recnika[0].keys())
+            csv_writer = csv.DictWriter(fobj, fieldnames=header)
+            csv_writer.writeheader()
+
+            for podaci in lista_recnika:
+                csv_writer.writerow(podaci)
+    except OSError as err:
+        stderr.write(f"GRESKA: {err}\n")
+
+-----------------------------------------------------------------------------------------------------
+
+
+input("") -> ispisuje se u konzoli i sluzi za unos sa tastature, vraca ono sto je uneto kao str
+
+divmod(deljenik, delilac) -> vraca redom: rezultat, ostatak
+
+sorted(lista, reverse= False) -> vraca sortiranu listu
+
+min(lista) -> vraca najmanji element iz liste
+
+max(lista) -> vraca najveci elemengt iz liste
+
+abs(broj) -> vraca apsolutnu vrednost broja
+
+list.append(broj) -> dodaje broj u listu
+
+print(f"Najmanji broj: {min_br}") -> dodaje se f pre "" ako printujemo promenljivu
+
+
+len(lista) -> vraca "broj elemenata" tj duzinu liste
+
+print("""    """) -> za ispis u vise redova
+
+randint(a, b) -> vraca "rendom" broj od a do b
+
+string.isdigit() -> vraca True/False u zavisnosti da li je karakter/string neka cifra
+
+zip(lista1, lista2) -> vraca ITERATOR (ne listu) taplova koji su dobijeni spajanjem elemenata dve liste u taplove po indeksu, i to po kracoj listi (ako je jedna lista duza, ti "visak" elementi se gube)
+
+[LIST KOMPREHENSN!!!] -> vraca listu, prvo ide element koji se vraca (tj kog je on oblika/formata), zatim for pa isti taj element (ugl bez funkcija) pa in pa neki range i na kraju if
+
+string.lower() ili karakter.lower() -> pretvara karakter ili svaki karakter stringa u mala slova
+
+karakter.islower() -> vraca True/False u zavisnosti da li je karakter malo slovo
+
+round(broj) -> zaokruzuje (pravo zaokruzivanje, menja taj broj nadalje u kodu), ali tako da ako treba da zaokruzi x.5 onda zaokruzuje na najblizi paran broj
+
+print(f"{broj:.2f}") -> ne zaokruzuje broj vec ga samo prikazuje sa 2 decimale i odseca ostale, ali promenljiva zadrzava svoju vrednost
+
+range(*nesto*) -> nesto moze biti interval od nekog broja a do b ili moze biti samo jedan broj
+
+all(lista) -> proverava da li je svaki element liste True, kao ZA SVAKI, ne mora lista da bude
+
+any(lista) -> proverava da li je bar jedan element liste True, kao POSTOJI, ne mora lista da bude
+
+lista[0] -> poziva prvi element liste
+
+string.strip() -> iseca sa pocetka i kraja stringa uneti karakter (ili string)
+
+string.split() -> deli string u listu stringova, deli ga po unetom karakteru
+
+",".join(lista) -> kad je u printu, istampaju se elementi liste spojeni unetim karakterom (stringom)
+
+reversed(lista) -> obrne listu, pa moze da se u petlji ide od poslednjeg do prvog elementa
+
+str(promenljiva) ili int(promenljiva) itd -> pretvara promenljuvu u dati osnovni tip podataka
+
+d = dict() ... d[i]= nesto -> "nesto" postaje jedna od vrednosti (i-ta vrednost) recnika
+
+zip_longest(lista1, lista2, fillvalue="nepoznato") -> spaja dve liste kao zip ali ne racuna koja je kraca nego koja se duza, a "nedostajuci" elementi krace liste se ispune sa fillvalue
+
+sorted(recnik.items(), key = itemgetter(1)) -> sortiraj recnik po VREDNOSTIMA
+
+d = defaultdict(int) ili d = dict() -> skoro uvek se koristi defaultdict()
+
+recnik[kljuc].append(vrednost) -> slicno kao dodavanje elemenata u listu
+
+recnik.items() -> za pristupanje kljucevima i vrednostima (pojedinacnim delovima tj ajtemima) recnika
+
+recnik.keys() i recnik.values() -> vracaju kljuceve odnosno vrednosti iz recnika ali ne bas kao listu, zato mora da se napise list() ispred ako treba da budu lista
+
+mean(lista) -> vraca prosecnu vrednost elemenata liste
+
+max(recnik/lista_recnika, key = itemgetter('kljuc')) -> za liste recnika i recnike mora da se stavi i key = i onda ili itemgetter ili lambda (itemgetter je bolji)
+
+string.rstrip('znakovi') -> stripuje date znakove ali krenuvsi s desna
+
+lista.extend(list) -> extend radi kao append ali append moze da doda samo jedan element u listu/recnik, dok extend moze da doda vise elemenata odjednom (kao da dodaje listu list)
+
+string.rsplit('znak', maxsplit = broj) -> splituje ali krenuvsi s desna i splituje samo do limita koji mu se postavi u vidu broja
+
+def funkcija (*brojevi) -> znaci da funkcija prima neki broj argumenata koji nije unapred poznat
+
+string[-1] -> poslednji karakter stringa; generalno je samo poslednji clan (moze da bude i lista)
+
+reduce(lambda a,b : a x b, lista) -> bukvalno umesto zareza izmedju svakog elementa liste, ubacuje se operacija x (npr. + ili *)
+
+filter(lambda: string: "neki uslov sa stringom", lista) -> filter bukvalno filtrira datu listu po nekom kriterijumu koji se zadaje pomocu funkcije lambda; filter vraca iterator (moze se proci kroz njega pomocu petlje npr for, ali nije eksplicitno lista), pa se skoro uvek pise list(filter(...))
+
+map(lambda element : "funkcija", lista) -> izvrsi funkciju definisanu u lambda nad svakim elementom date liste; isto vraca iterator pa treba list(map(...)) ili dict(map(...))
+
+dekorator -> pise se po sablonu (koji je dat) i uglavnom se koristi za merenje vremena; izvrsava nesto pre funkcije koju dekorise i nesto posle nje 
+
+class atribute -> pise se van __init__ konstruktora, a u klasi
+
+datetime_format -> %Y je godina, %m je mesec, %d je dan, %H je sat i %M je minut; sve ovo se pise u stringu dakle pod "" ili ''
+
+def __init__(self, *atributi) -> ovo je konstruktor i tu pisemo sve atribute i sve sto treba da sadrzi klasa (osim klas atributa) i svi atributi u funkciji se pisu sa prefiksom self.naziv_atributa; atributi (tj argumenti) mogu imati i odrazumevanu vrednost pa se to napise kao arg = True (npr); bice jasno sta ide u argumente a sta ne ide
+
+@property
+def atr_geter(self):
+	try:
+		return self.__atr
+	except AttributeError:
+		self.__ruta = None
+		return self.__ruta
+	
+@atr.setter
+def atr(self, vrednost):
+	if isinstance(tip_podatka, str) and "USLOV":
+		self.__atr = vrednost
+		return
+
+self.__atr -> ovo se kuca uvek i dosledno kad se radi unutar klase ciji je atribut atr; funkcionalno unutar iste klase, self.atr i self.__atr rade istu stvar
+
+isinstance(promenljiva, str/int/Klasa/...) -> proverava da li je promenljiva objekat date klase/ tipa podatka (proverava tip objekta)
+
+obj not in [...] -> not in provarava (i vraca boolean vrednost) da li je data promenljiva u nekoj listi (moze i string ili range)
+
+stderr.write("GRESKA") -> ispisuje poruku o gresci
+
+datetime.now() -> vrlo koristan; datetime MOZE da se oduzima tj samo se ukuca minus; takodje vremena se porede samo znakovima poput > i <
+
+@classmethod
+def alt_konstruktor(cls, atr):
+	if ... :
+		return cls("svi neophodni argumenti za originalni konstruktor")
+	stderr.write("GRESKA")
+	return None
+
+datetime.strptime(string, Klasa.odgovarajuci_format) -> pretvara string koji je u odgovarajucem formatu u datetime u takodje adekvatnom formatu i vraca datetime
+
+datetime.strftime(datetime, Klasa.odgovarajuci_format) -> pretvara datetime koji je u datom formatu u string koji ce biti u istom formatu i vraca string
+
+
+dani = datum.days
+sati, ostatak_sekundi = divmod(datum.seconds, 3600) ->PRISTUPANJE: DANIMA SATIMA MINUTIMA I SEKUNDAMA
+minuti = ostatak_sekundi // 60
+
+
+ITERATOR:
+
+    def __iter__(self):
+        self.__next_index = 0
+        return self
+
+    def __next__(self):
+        if self.__next_index == len(self.lista_kroz_koju_iterira):
+            raise StopIteration
+        sledeci = self.lista_kroz_koju_iterira[self.__next_index]
+        self.__next_index += 1
+        return sledeci
+
+
+ENUM:
+
+class ImeKlase(Enum):
+    ENUM1 = 'string1' 
+    ENUM2 = 'string2'
+    ENUM3 = 'string3'
+    
+@staticmethod -> pise se iznad def dela funkcije kao dekorator i cini funkciju staticnom
+
+raise Error -> isto kao u javi throw new Error
+
+type() -> radi slicnu stvar kao isinstance(), ali je malo gori, preporuka: isinstance()
+
+return "string".super().__str__() -> kada treba da se vrati toString, ali je klasa nasledjena i ako postoji toString metoda u primarnoj klasi onda ovo moze da skrati posao
+
+
+def __init__(self, arg = difoltna_vrednost, **kwargs):
+	super().__init__(**kwargs)
+|
+|
+|________> uvek se pise u klasu koja nasledjuje nadklasu tj uvek se pise u podklasu	
+
+
+re.split('[...]', string) -> isto kao split(), ali ovde nije metoda za str nego je funkcija koja vraca listu i kao ulazne argumente (parametre) prima prvo kriterijume (moze vise njih) po kojima se splituje i drugo prima string koji se splituje
+
+sorted(lista, key = attrgetter('naziv_atributa_klase'), reverse = True) -> sortiraj listu po datom ATRIBUTU i to po OBRNUTOM redosledu
+
+generator -> funkcija koja vraca jedan po jedan objekat pomocu naredbe yield; za razliku od normalne funkcije koja vraca vrednost pomocu naredbe return, kojim se zatim i zavrsava celokupan rad funkcije, generator moze da sadrzi yield u petlji i da yield u svakoj iteraciji vraca neku vrednost (objekat), a da se petlja i dalje izvrsava bez prekidanja do kraja rada petlje 
+
+string.replace('stari_znak', 'novi_znak') -> zamenjuje stari znak u stringu novim znakom 
+
+recnik{
+	kljuc1 : vrednost1,
+	kljuc2 : vrednost2,	-> ovako se stvara novi recnik
+	"kljuc3" : vrednost3
+}
+
+_____________________________________________________________________________________________________________________
+
+                                                    PANDAS
+
+
+
+
+
+podaci = pd.read_csv(DATA_DIR / 'fajl.csv') -> smestanje ucitanih podataka u promenljivu sa kojom ce se na dalje raditi
+
+podaci.head(10) ili podaci.sample(10) -> prikazivanje prvih odnosno nasumicnih 10 redova 
+
+podaci.info() -> ispisuje sve potrebne informacije o tabeli sa podacima
+
+podaci.isna().sum() -> prikazuje za svaku kolonu koliko ima "nedostajucih" vrednosti
+
+podaci.dropna(how = 'all', inplace = True, subset = [kolona1, kolona2]) -> uklanja sve redove koji imaju nedostajuce vrednosti; deo sa kolonama se koristi samo kada treba da se precizira
+
+deo_podataka = svi_podaci.loc[*uslov*, *kolone_za_prikazivanje*] -> koristi se uglavnom uvek loc a retko iloc; prvo ide uslov koji treba da se ispuni u selekciji, a onda kolone koje zelimo da se prikazu
+
+
+def get_csv_files(fpath: Path) -> list:
+    if not fpath.is_dir():
+        raise RuntimeError("GRESKA: nije direktorijum")
+    csv_files = []
+    for item in fpath.iterdir():
+        if not item.is_dir() and item.suffix == '.csv':
+            csv_files.append(item)
+    return csv_files
+    |
+    |________________________________> funkcija za prikupljanje SVIH potrebnih csv fajlova
+
+
+
+svi_podaci = pd.DataFrame()
+for csv_file in get_csv_files(DATA_DIR):
+    temp_df = pd.read_csv(csv_file)
+    all_sales = pd.concat([all_sales, temp_df])
+svi_podaci.reset_index(drop=True, inplace=True)
+    |
+    |
+    |______________________> stavljanje svih podataka u data frejm "svi_podaci" i sredjivanje
+
+
+svi_podaci['naziv_kolone'] = pd.to_numeric(svi_podaci['naziv_kolone'], errors = 'coerce') -> pretvaranje tipa podataka u datoj koloni iz object u int
+
+
+svi_podaci['kolona_datum'] = pd.to_datetime(svi_podaci['kolona datum', errors = 'coerce' format = "format_kao_string"]) -> pretvaranje tipa podataka u datoj koloni iz object u datetime
+
+
+svi_podaci.kolona1 = svi_podaci.kolona1.astype(int) -> za finlano i sigurno pretvaranje u int
+
+
+svi_podaci.drop(columns=['nazivi_kolona'], inplace = True) -> brise date kolone
+
+
+svi_podaci['kolona_1.1'] = svi_podaci['kolona1'].apply(naziv_funkcije) -> primenjuje datu funkciju, koja se pise BEZ ZAGRADA, na sve vrste i na osnovu kolone kolona1 pravi kolonu kolona_1.1; ne mora da bude ni naziv funkcija moze da se stavi i lambda funkcija ili kombinacija oba
+
+
+def naziv_funkcije(argument: str) -> str: -> za funkcije koje se prosledjuju u apply() metodu, oznacava se sta je argument i u sta se pretvara
+
+
+obradjeni_podaci_folder = DATA_DIR / 'obradjeni_podaci'
+obradjeni_podaci_folder.mkdir(parents=True, exist_ok=True)
+svi_podaci.to_csv(obradjeni_podaci_folder / 'podaci_fajl.csv', index=False)
+|
+|
+|
+|___________> cuvanje obradjenih podataka 
+
+
+svi_podaci = pd.read_csv(Path.cwd() / 'putanja_do_csv_fajla' / 'podaci_fajl.csv' parse_dates=['datetime_kolona']) - > otvaranje fajla sa obradjenim podacima i smestanje u promenljivu svi_podaci
+
+svi_podaci['kolona_proizvod'] = svi_podaci['kolona_mnozilac1'] * svi_podaci['kolona_mnozilac2'] -> kolone mogu ovako da se mnoze (intuitivno je)
+
+svi_podaci['kolona_mesec'] = svi_podaci.kolona_sa_datetime.dt.month -> ovako ce se napraviti kolona samo sa mesecima (ne moraju meseci to je samo primer, moze .hour)
+
+deo_podataka = svi_podaci.groupby('kolona1').kolona2.sum() -> pravi se novi data frejm sa datim podacima; u groupby() ide ono po cemu se grupise tj kolona1, a sum() se odnosi na kolonu posle groupby tj na kolonu kolona2
+
+deo_podataka = svi_podaci.groupby('kolona1').[kolona2, kolona3].sum() -> posle groupby moze da se npr sumira vise kolona, ne mora jedna
+
+deo_podataka.sort_values(by = 'kolona', ascending = False, inplace = True) -> sortiranje (uglavnom prostijih) data frejmova u OPADAJUCEM redosledu; inplace se stavlja radi "sigurnosti"; by pokazuje po kojoj koloni treba sortirati kada ima vise kolona vrednosti; ovo vraca data frejm, a ne pandas seriju
+
+deo_podataka = podaci['kolona'].sort_values(ascending = False) -> radi slicno kao kada bi u sort_values() stavljali uslove ali ovo vraca pandas seriju a ne data frejm
+
+
+x = deo_podataka.index.tolist()
+y = deo_podataka.values.tolist()
+|
+|
+|________> za pravljenje bar plot grafikona nam treba x i y osa pa ih postavjamo; .index i .value mogu da pristupe podacima za indeks i vrednost; tolist() ce napraviti da ti podaci budu u obliku liste jer je tako lakse 
+
+fig, ax = plt.subplots(figsize=(10,10)) -> ovo se radi za svaki grafikon; dobijamo ose i fig kao "telo" grafikona; figsize sluzi da poveca/smanji celokupni prikaz grafikona
+
+plt.show() -> prikazuje grafikon
+
+ax.bar(x,y, color = "boja") -> kreira bar plot sa zadatim osama (parametrima); ovo ce se uvek koristiti, samo sto ce u zavisnosti od vrste grafikona biti nesto drugo umeso bar; color samo sluzi za boju 
+
+ax.plot(x,y, marker = 'o') -> isto kao bar plot samo sto ovo pravi line plot i podesava markre na grafikonu
+
+ax.set_xlabel('tekst_ose') -> intuitivno
+ax.set_ylabel('tekst_ose') -> intuitivno
+ax.set_title('tekst_grafikona') -> intuitivno
+
+ax.set_xticks(range(...), labels = kolona) -> podesava da vrednosti na datoj osi vizuelno(vidno) idu u datom intervalu; moze range() da bude i len(lista); labels postavlja da vrednosti budu vrednosti iz date kolone (mora biti prosledjeno kao lista)
+
+ax.tick_params(axis='x', labelrotation = 90, labelsize = 10, labelcolor = 'boja')
+ax.tick_params(axis='y', labelcolor='boja', labelsize=10)
+|
+|
+|________________> za podesvanje oznaka vrednosti na datim osama; intuitivno
+
+deo_podataka.max() -> vraca vrednost maksimalne vrednosti
+deo_podataka.idmax() -> vraca indeks maksimalne vrednosti
+
+
+deo_podataka = svi_podaci.groupby('kolona1').kolona2.mean() -> isto kao pre samo moze da se stavi i mean() umesto sum()
+
+ax.grid(visible=True, which='major', axis='both', color='boja') -> uglavnom za ax.plot() tj za line plot; podesava grid linije 
+
+svi_podaci.kolona.unique().tolist() -> vraca listu svih jedinstvenih elemenata u koloni kolona
+
+svi_podaci.kolona.value_counts() -> vraca tabelu gde je indeks naziv elementa iz kolone kolona, a vrednost broj redova u kojima se pojavljuje naziv bas tog elementa 
+
+
+fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(10,10), sharey='row') -> za pravljenje tacno 2 horizontalna bar plota, zato je ncols = 2, a x osu fakticki dele, pa je nrows=1; sharey samo "ispravlja preklapanja"
+
+ax1.barh(x,y1) -> isto kao bar samo za horizontalni prikaz; malo upitno da li treba (x,y1) ili (x1,y)
+ax.barh(x,y2) -> ista stvar kao malopre, ali za drugi grafikon
+
+data_frejm = deo_podatak.unstack(fill_value = -100) -> unstack() sluzi da, kada se odradi groupby() po vise kolona i dodje do ugnjezdavanja indeksa, se ugnjezdeni indeksi raspakuju i napravi data frejm tj tabela koja je pregledna i ima u cosku indeks po redovima i indeks po kolonama od pocetnog multiindeksa; fill_value sluzi da popuni vrednosti u dobijenom data frejmu koje su nedostajuce
+
+podaci.columns = ["ime_kolone1", "ime_kolone2"] -> samo promena imena kolona (ukoliko ih ima tacno 2)
+
+hm = ax.imshow(df, cmap='boja') -> pravljenje hit mape (isto kao ax.bar(x,y))
+
+cbar = ax.figure.colorbar(hm, ax = ax)
+cbar.ax.set_ylabel("opis", rotation = -90, va = "bottom")
+|
+|
+|______> podesavanje kolor bara sa strane
+
+
+podaci_data_frejm = podaci.to_frame() -> pretvara pandas seriju u data frejm
+
+deo_podataka.reset_index(inplace = True) -> postavlja da indeksi budu brojevi od 0 do kraja
+
+deo_podataka = svi_podaci.groupby('kolona1')[kolona2].agg(['count', 'mean', 'min', 'max'])
+|
+|
+|________> grupisanje redova po vrednosti u koloni "kolona1"; .agg() primenjuje jednu ili vise 	   agregatnih funkcija na kolonu "kolona2"
+
+pd.factorize(podaci.kolona) -> vraca redom: listu "indeksa" koji su unkatni, sto znaci da je prvi element u koloni 0 i ako se on (taj str/datetime/int/float) ponovi u koloni, bice oznacen opet sa 0; listu unikatnih vrednosti iz kolone, dakle to su ti unikatni str/datetime/int/float itd
+
+
+cmap = pypalettes.load_cmap("boja")
+colors = [cmap(i) for i in lista_indeksa_fctz]
+|
+|
+|______> odabiranje zeljenih boja za tri map
+
+
+squarify.plot(
+    sizes = ppg_df.kolona_za_velicinu,
+    label = ppg_df.kolona_za_tekst,
+    color=colors,			-----> za postavljanje tri mape
+    text_kwargs={'color':'white'},
+    pad=True,
+    ax=ax
+)
+
+
+
+ax2 = ax1.twinx() -> za plot lajn sa dve skale, da se "dupliraju"
+
+fig.tight_layout() -> ne znam sta radi, ali je za plot lajn sa dve skale
+
+
+ucitaj_iz_txt_fajla(putanja) -> vraca listu linija (odvojenih entereom) iz txt fajla ali bez '\n'
+
+
+deserijalizuj_podatke(putanja) -> vraca tacno jedan objekat istog tipa koji je u njega i upisan
+
+
+ucitaj_iz_csv_fajla(putanja) -> vraca listu recnika gde su kljucevi nazivi kolona a vrednosti odgovarajuce vrednosti u "tabeli" (i ovako svaki element tj recnik liste)
+
+_____________________________________________________________________________________________________
+
+
+PLOT BAR:
+
+deo_podataka.sort_values(ascending=False, inplace=True)
+
+x = deo_podataka.index.tolist()
+y = deo_podataka.values.tolist()
+
+fig, ax = plt.subplots()
+ax.bar(x, y, color='boja')
+ax.tick_params(axis='x', labelrotation=90, labelsize=9, labelcolor='boja')
+ax.tick_params(axis='y', labelcolor='boja', labelsize=9)
+ax.set_ylabel('OPIS')
+ax.set_title('OPIS')
+
+plt.show()
+
+-----------------------------------------------------------------------------------------------------
+
+TRI MAPA:
+
+import pypalettes
+import squarify
+
+cmap = pypalettes.load_cmap("boja")
+colors = [cmap(i) for i in podaci_brojevi_faktorizovano]
+
+fig, ax = plt.subplots(figsize=(8,8))
+ax.set_axis_off()
+
+squarify.plot(
+    sizes=sales_per_city_df.Quantity_Ordered,
+    label=sales_per_city_df.City,
+    color=colors,
+    text_kwargs={'color':'white'},
+    pad=True,
+    ax=ax
+)
+
+ax.set_title("Total sales revenue across cities", fontsize=14)
+
+plt.show()
+
+-----------------------------------------------------------------------------------------------------
+
+LAJN PLOT:
+
+x = deo_podataka.index.tolist()
+y = deo_podataka.values.tolist()
+
+fig, ax = plt.subplots(figsize=(8,6))
+ax.plot(x, y, marker='o')
+ax.set_xticks(range(0,10))
+ax.set_xlabel("OPIS")
+ax.set_ylabel("OPIS")
+ax.grid(visible=True, which='major', axis='both', color='lightgray')
+ax.set_title("OPIS")
+
+plt.show()
+
+-----------------------------------------------------------------------------------------------------
+
+DUPLI HORIZONTALINI BAR PLOT:
+
+
+deo_podataka.sort_values(by='kolona', inplace=True)
+indeksi = deo_podataka.index.tolist()
+kolona1 = deo_podataka.kolona_1.tolist()
+kolona2 = deo_podataka.kolona_2.tolist()
+
+fig, (ax_k2, ax_k1) = plt.subplots(nrows=1, ncols=2, figsize=(10, 10), sharey='row')
+
+ax_k2.barh(indeksi, kolona2)
+ax_k2.set_title('OPIS')
+
+ax_k1.barh(indeksi, kolona1)
+ax_k1.set_title('OPIS')
+
+plt.show()
+
+-----------------------------------------------------------------------------------------------------
+
+DUPLI LINIJSKI PLOT:
+
+x = deo_podataka.index.tolist()
+y1 = deo_podataka.kolona1.tolist()
+y2 = deo_podataka.kolona2.tolist()
+
+fig, ax1 = plt.subplots(figsize=(8,7))
+
+boja1 = "b1"
+boja2= 'b2'
+
+ax1.plot(x, y1, color=boja1, marker="d")
+ax1.tick_params(axis='x', labelrotation=90, labelsize=10)
+ax1.tick_params(axis='y', labelcolor=boja1)
+ax1.set_ylabel("OPIS", color=boja1)
+ax1.grid(visible=True, axis='x', color='gray', alpha=0.5)
+
+ax2 = ax1.twinx()
+
+ax2.plot(x, y2, color=boja2, marker="o")
+ax2.tick_params(axis='x', labelrotation=90, labelsize=9)
+ax2.set_ylabel("OPIS", color=boja2)
+
+fig.tight_layout()
+
+plt.show()
+                                        
+
+-----------------------------------------------------------------------------------------------------
+
+HIT MAPA (primer):
+
+
+products = df.index.tolist()
+cities = df.columns.tolist()
+
+fig, ax = plt.subplots(figsize=(9,10))
+
+cmap = pypalettes.load_cmap("purple_material")
+
+hm = ax.imshow(data, cmap=cmap)
+ax.set_xticks(range(len(cities)), labels=cities)
+ax.set_yticks(range(len(products)), labels=products)
+ax.tick_params(axis='x', labelrotation=90)
+ax.set_title("Revenues across cities and products")
+
+cbar = ax.figure.colorbar(hm, ax = ax)
+cbar.ax.set_ylabel("Revenue in million USD", rotation = -90, va = "bottom")
+
+
+data = df.values
+for p in range(len(products)):
+    for c in range(len(cities)):
+        col = "white"
+        val = f"{data[p,c]/1000000:.2f}"
+        ax.text(c, p, val, va='center', ha='center', color=col)
+
+
+plt.show()
+
+
+!!! DEO SA FOR PETLJOM IDE SAMO ZA HIT MAPE SA VREDNOSTIMA
+
+_____________________________________________________________________________________________________
+
+from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+DATA_DIR = Path.cwd() / 'data' / ...
+podaci = pd.read_csv(DATA_DIR / ... / 'fajl.csv')
+
+
+
+
+
