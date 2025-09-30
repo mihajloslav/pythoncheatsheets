@@ -1,0 +1,55 @@
+Učitavanje fajlova
+
+Pošto se mnogo ljudi zeznulo kod učitavanja fajlova, 
+jer direktorijumi nisu kao sa vežbi, već imate code direktorijum i data direktorijum, 
+evo vam ukratko kako da pristupite data direktorijumu ako se nalazite u code:
+
+
+Projekat
+-data
+---neki.txt
+---neki2.txt
+-code
+---tvojkod.py
+
+Path.cwd() - će da ti vrati putanju do "code" foldera
+
+Ti moraš da izađeš iz code foldera i da pristupiš data folderu, a to ćeš da uraditi sa:
+
+Path.cwd().parent - ovo ce da ti vrati parenta od tvog foldera u kome se nalaziš
+
+Ako se nalaziš u code, parent je Projekat(u ovom primeru)
+
+i onda samo uradiš Path.cwd().parent / 'data'
+------------------------------------------------------------
+Pozivanje funkcija u notebooku
+
+Ono što nisu objašnjavali na vežbama i predavanjima, 
+a došlo je na kolokvijumsko zadatku u ovom roku jeste da izračunate koliko se puta pojavljuje svaka reč 
+i da prikažete preko grafova. 
+
+Ako imate neku skriptu zoran.py i sad u njoj ste napravili funkcije 
+funkcija1, funkcija2, funkcija3, 
+napravite jupyter notebooku i u njemu importujete ove funkcije sa : 
+from zoran import funkcija1, funkcija2, funkcija3 
+i onda samo pozovete te funkcije u okviru notebookua i ono što vam vrate prikažete u grafu
+
+imate primer u julskom roku:
+
+-------------------------------------------------------
+Julski rok 2025 pandas
+
+Bilo je da se očiste fajlovi od NaN vrednosti po KOLONAMA
+
+Da se napravi novi dataset bez redova gde su Artisti Al Kooper i Mike Bloomfield
+i da se sačuva u nov fajl
+
+da se iz kolone release_date izvuce godina u year kolonu i da se year kolona stavi ispred release_date
+
+da se proveri da li je sve int odnosno da li imam float i NaN vrednosti
+
+
+da se napravi line chart sa prosečnim danceabilityjem po godinama
+
+da se kreira box chart sa valencama pesama odnosno nesto mode=1 i mode=0 ne sećam se kako je bilo
+------------------------------------------------------------

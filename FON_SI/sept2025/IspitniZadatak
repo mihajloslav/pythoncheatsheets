@@ -1,0 +1,14 @@
+Sept 2025 Ispitni zadatak
+U projektu kreirati folder 'ispiti' i u njemu dva foldera: 'data' i 'notebooks'. U notebooks kreirati jupyter notebook pod nazivom 'adoption.ipynb'
+
+1. Učitaj dataset, 
+obriši REDOVE sa NaN vrednostima, 
+izbaciti kolone PetID, Vaccinated, HealthCondition i PetType. (nisam siguran da li je bilo PetType, ali svakako nije bitno)
+Izbaciti redove gde Size nije jednako: 'Small', 'Medium' ili 'Large
+sačuvati očišćen dataset u 'adoption_clean.csv'
+
+2. U očišćenom datasetu, napraviti kolonu AgeYears. AgeYears dobijamo tako što AgeMonths podelimo sa 12 i zaokružimo na ceo broj. Nakon kreiranja proveriti da li su sve vrednosti u koloni AgeYears tipa int. Staviti da kolona AgeYears bude ispred AgeMonths.
+
+3. Prikazati srednju vrednost TimeInShelterDays po godinama AgeYears u vidu linijskog plota.
+
+4. Preko bargrapha prikazati za svaku kategoriju Size, prosečnu vrednost za WeightKg.
